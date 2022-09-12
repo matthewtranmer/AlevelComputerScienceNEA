@@ -1,0 +1,222 @@
+Matthew----------------------------------
+Identity Key: 
+78991965095873587759626101710093850610582089758268514298546805374541360334657
+Identity Key Base64: 
+QQd1pLTp4okejfLfusp7+k7rWemCwPw7MqKP4iveo64A
+Encrypted Identity Key Base64: 
+F0dfzdnQ3+VmlgpWYIDN+sPfEteviwCqlDUVOQ0G1Ddj+lMDoQEbM0+hug0=
+-----------------------------------------------
+Signed Pre Key: 
+52812457004565610955347043864441388696116107498774332554740389223699443957082
+Signed Pre Key Base64: 
+Wj3V1tjECMX0g5RHDVwb7bldQmA58IK/gh7hipfKwnQ=
+Encrypted Signed Pre Key Base64: 
+EXwIqpjo4dARtDkDbdPT1PL6FYKzglu8kj05T0If6C9J4y87/BgLHVf533E=
+-----------------------------------------------
+Pre Key Identifier: 
+459c6ce7-85e6-46da-8990-54844aaf2baa
+Private Key:
+102722586260843462728727516483865513036055970635860780669305364124591492344423
+Encoded Public Key: 
+1WewH5CGytUZtWRIFbyMpwaD/hGrV5isYr/hV8dOetAB
+Encrypted Private Key: 
+HCBUkZzV6toZnSxlULbj1+beIYvUjHX3ugYbDBc4mksazGx44FoLJWfiww0=
+-----------------------------------------------
+Pre Key Identifier: 
+92250476-ef0a-483a-a965-0ec9d62df9d8
+Private Key:
+107057184553314758391774093674000775578060261605699254286281793148924661771330
+Encoded Public Key: 
+oC+ussSg0GHhB6fp/8wQEXkedsNPjnPCsYiHI1Ca54UB
+Encrypted Private Key: 
+F2dBzsPGvP0TmwNgZ7/yqoHGN6fr2H+8hyEeSjMBxjUY3mAD2yoCYlPY+Q0=
+-----------------------------------------------
+Pre Key Identifier: 
+a85f83a4-77c1-4688-9a75-02ccdd14720c
+Private Key:
+4292326126799801792446907636808090439342559769671837324716671087587297886671
+Encoded Public Key: 
+M+JNGTH5LE7A0xIpsiScrW4jj2a01iBgVj2I53lYbFYB
+Encrypted Private Key: 
+PCJ9vcLE2KUovRNAb7/Z7PSDKqzC1G7pjmkUP0kM0GVcyWog5lEFM0bG5XE=
+-----------------------------------------------
+Pre Key Identifier: 
+6cef33af-040d-4662-9844-65c0c9bc7a61
+Private Key:
+34129302792739233329729209262181166157555616916601647647758106853357214911121
+Encoded Public Key: 
+zJSSG510+dSwpsHX8kqDUutIBXhhEiv7PePe4YyLnBkA
+Encrypted Private Key: 
+LUNLr9Gpx6YIvDF1fLb19YXuW9jBo0S9uQUdQykzjFMF2E0RzCwMF0TS/XE=
+-----------------------------------------------
+Pre Key Identifier: 
+433e9f3b-7127-4862-9b72-6ecb3862a9d5
+Private Key:
+101486629590334659889958695775204778366352656632697346626863683515642737989836
+Encoded Public Key: 
+prkMC018KhL2oxpnu+RByl4OAK1myn2ZmmNFVmRVZ7wB
+Encrypted Private Key: 
+PFRciYKsxKYDyAtlebXR1PX9CKT+gUW98zQtEzwzxFYWvlwyoV0nOni8zw0=
+-----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+Pre Key Identifier: 
+459c6ce7-85e6-46da-8990-54844aaf2baa
+Private Key: 
+102722586260843462728727516483865513036055970635860780669305364124591492344423
+-----------------------------------------------
+Pre Key Identifier: 
+92250476-ef0a-483a-a965-0ec9d62df9d8
+Private Key: 
+107057184553314758391774093674000775578060261605699254286281793148924661771330
+-----------------------------------------------
+Pre Key Identifier: 
+a85f83a4-77c1-4688-9a75-02ccdd14720c
+Private Key: 
+4292326126799801792446907636808090439342559769671837324716671087587297886671
+-----------------------------------------------
+Pre Key Identifier: 
+6cef33af-040d-4662-9844-65c0c9bc7a61
+Private Key: 
+34129302792739233329729209262181166157555616916601647647758106853357214911121
+-----------------------------------------------
+Pre Key Identifier: 
+433e9f3b-7127-4862-9b72-6ecb3862a9d5
+Private Key: 
+101486629590334659889958695775204778366352656632697346626863683515642737989836
+-----------------------------------------------
+Mick----------------------------------
+Identity Key: 
+75547674610834801116378119876111222936450591246325199101846009801210029239619
+Identity Key Base64: 
+Q23BOkQCr12UggDrF9XDVg2/uVYzXkk5DqXMXfF3BqcA
+Encrypted Identity Key Base64: 
+xpK6wOKh1kRy8d9D5yJ0qS867IfJ+8bzSA70iStgm1OA0UXwl3GZkQBY8Co=
+-----------------------------------------------
+Signed Pre Key: 
+98849143013605296977292230338302277740260289281749215724155454095152919647601
+Signed Pre Key Base64: 
+cZUM8fGbqxipQYp5ibNpoPl7gd4W/QeUK+78j9yhitoA
+Encrypted Signed Pre Key Base64: 
+9Prcz5WswGVxuIRm0RxA7gBh+rPwzJjrWjyZpFxalTOPiyqFpS6myitd/Co=
+-----------------------------------------------
+Pre Key Identifier: 
+5677c1c8-c58e-43f0-8415-4d4eb08c2fa5
+Private Key:
+11501473225395635731018142360937189663256872477605478982530557531128440476267
+Encoded Public Key: 
+6Td+OR0GFRqKxS36C6QucjYcU/PY/YF7rQCUF8wyflIB
+Encrypted Private Key: 
+9pnC++ag/jJPlad+tCZ8tCM32fbW98HtSijlh0BdgTSd93/3nCW2wyB7+FY=
+-----------------------------------------------
+Pre Key Identifier: 
+24b52aa5-ab7f-4f49-a0db-2e324ec1e1f2
+Private Key:
+44213966103639129330619508027895087414736547516252687482894678028225247310635
+Encoded Public Key: 
+4w0cJV959zHnEbe6lYMa+jhxVbrYdlyA0kbdjDxXLQMB
+Encrypted Private Key: 
+3I/ExPyezWZT+btn9Qtqo19xwK356sOJU27AoRR+pwmy4zLrg3TrkTVu1lY=
+-----------------------------------------------
+Pre Key Identifier: 
+3cef44dd-3337-42c9-90f5-8d2a1b9c8ff5
+Private Key:
+20715273055636323306523493826084425379359341659185101647330793138429358101961
+Encoded Public Key: 
+wKu6tEtHlNgIlg0vhNkDcg73c2LUEfIl0YVv6EXbeYsA
+Encrypted Private Key: 
+7sTR6vWv4WRvtIcitDNor11U0a3Zq8fuCRb4mCtyiC20yFqMmy6F1jhqo1Y=
+-----------------------------------------------
+Pre Key Identifier: 
+78c0010f-19d2-40c2-acc0-db5c6d2ca6af
+Private Key:
+67662354999731822421029366654762227619635986716197600684743551256041166619132
+Encoded Public Key: 
+qVVxeCCUmF8W/127TtIGNA3jXDmxqfCwv6+tO35Ox9oA
+Encrypted Private Key: 
+uOXBwcyO9HBllIRz2RxCmlhnjZKwq4LvDzDYqgFglVe89S/cmESy6C4cxio=
+-----------------------------------------------
+Pre Key Identifier: 
+fa739c4d-e65e-4042-a228-8d269fbbb01c
+Private Key:
+114756854807929532450961556411606750646318920873065620216025879501276636147346
+Encoded Public Key: 
+l6OF8/CXXouMZqZcFFAngCkjTgCSekmh3gMRhLRyWqcA
+Encrypted Private Key: 
+/M2988Cu8E9MiNV6ySRYkFs32vfXycKRCznqgjVduFSj4kj4/Dio9jZfoyo=
+-----------------------------------------------
+
+
+Dave----------------------------------
+Identity Key: 
+34595183664950649554593351144722399722383154662009680836258739412688152321857
+Identity Key Base64: 
+QV8EITPqxalBJO1zkCJy6yvq3UHtKAAHt6mKVxgufEw=
+Encrypted Identity Key Base64: 
+6eN4ojLxZ3C1f+IfZMdvcI3VFj83RlvinZI5TGtBLUlpgzdaMiSmd4yiTyI=
+-----------------------------------------------
+Signed Pre Key: 
+94333656150186526084471136722154898423862749508891686663948527898305252332286
+Signed Pre Key Base64: 
+/pLIhquU6+etpFK+PcRWVROYBWbOCy1kZIBOFxD1jtAA
+Encrypted Signed Pre Key Base64: 
+l8UMrhPUQlT7NespXs4VIbb1DhFXbWLK7JATd2N5XWpH/BheIiSFM4CTeV4=
+-----------------------------------------------
+Pre Key Identifier: 
+aab3f872-0dab-4954-abe7-2c7353d81efe
+Private Key:
+21228927771488278373906557632205166366625334904584280582406091382030857130794
+Encoded Public Key: 
+5vLhI0yTrpp/J0wKLwIsDINLNSUFulnx9yz+bitHcn8A
+Encrypted Private Key: 
+88EOkTriZkqvee83SP5tco3eMgp1XRv82741dBVLNVtt5mJSCxCYbt2eDCI=
+-----------------------------------------------
+Pre Key Identifier: 
+49b021a6-bb18-431a-a56f-d73cab9ec804
+Private Key:
+60953329301909368536695769115459111009692375279475433802004593256210569191562
+Encoded Public Key: 
+QoIp1OZqpQ2elUYDpX1XwQ5qQouPL6pQBQnT2isT44EB
+Encrypted Private Key: 
+0dgDsUOSY2SfbOQpWsowc9TEPwxoSBX85vUUf0RCAng2+3V4A2n4YZ2IYV4=
+-----------------------------------------------
+Pre Key Identifier: 
+da8bd4f9-5ec7-497d-a3fb-33e21e245a21
+Private Key:
+15769388196785811401280990024059250400953763049850638377610015635632522577549
+Encoded Public Key: 
+Qzujvp+a1Qw9Yjg8FUnMOiHuKEqzDmZQ0IZj7M+KUKwA
+Encrypted Private Key: 
+0tYapk7UYkL7b+oRW8AvY4DQORR7Blzqyf40c1VHCXh+gm1VUmy2bdm0cSI=
+-----------------------------------------------
+Pre Key Identifier: 
+7d5a5caa-49aa-4267-a41e-bab5c92f008a
+Private Key:
+95537884783487764411861330443987097306602362538886097673830387354436301661784
+Encoded Public Key: 
+0+Oo2h7agjA3wR2oHw9K7TRA2U/MWLTClzJxOtIPNawA
+Encrypted Private Key: 
+7/4ioDKUW0CJLc8QYOpuaIrEORBlRkjJ26M5dndoGHFNjTFrCxGwRaWpdV4=
+-----------------------------------------------
+Pre Key Identifier: 
+9645421e-aeca-462d-93d0-fac35a3b6b60
+Private Key:
+100081665331619102427436193660039175004151829816402892657791619460289064144821
+Encoded Public Key: 
+eSdn1uPnMUi6rF0EO085csfxg99l+FRH5Clt0u8yWUMB
+Encrypted Private Key: 
+zORr3gnqei6dZvoXYtoUQ9G9Bg9jCV7n+4ggAFVYPTRWhDBLKR6YMbipCF4=
+-----------------------------------------------
+
+

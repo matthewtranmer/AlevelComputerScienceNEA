@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Matthew_Tranmer_NEA_Server/1.0.0": {
+        "runtime": {
+          "Matthew_Tranmer_NEA_Server.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Matthew_Tranmer_NEA_Server/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

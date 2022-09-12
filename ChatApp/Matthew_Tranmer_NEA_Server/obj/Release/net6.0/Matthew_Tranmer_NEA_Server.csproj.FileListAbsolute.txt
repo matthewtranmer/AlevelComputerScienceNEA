@@ -1,0 +1,15 @@
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\bin\Release\net6.0\Matthew_Tranmer_NEA_Server.exe
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\bin\Release\net6.0\Matthew_Tranmer_NEA_Server.deps.json
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\bin\Release\net6.0\Matthew_Tranmer_NEA_Server.runtimeconfig.json
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\bin\Release\net6.0\Matthew_Tranmer_NEA_Server.dll
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\bin\Release\net6.0\Matthew_Tranmer_NEA_Server.pdb
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.csproj.AssemblyReference.cache
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.AssemblyInfoInputs.cache
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.AssemblyInfo.cs
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.csproj.CoreCompileInputs.cache
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.dll
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\refint\Matthew_Tranmer_NEA_Server.dll
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.pdb
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\Matthew_Tranmer_NEA_Server.genruntimeconfig.cache
+C:\Users\Matthew\source\repos\Matthew_Tranmer_NEA\obj\Release\net6.0\ref\Matthew_Tranmer_NEA_Server.dll

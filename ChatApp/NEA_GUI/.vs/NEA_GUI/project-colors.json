@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "e05a4388-96ba-45be-8c0d-141ace8a935c": {
+      "ProjectGuid": "e05a4388-96ba-45be-8c0d-141ace8a935c",
+      "DisplayName": "NEA_GUI",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

@@ -1,0 +1,5 @@
+C:\Users\Matthew\Documents\NEARelease\Matthew_Tranmer_NEA_Server.exe
+C:\Users\Matthew\Documents\NEARelease\Matthew_Tranmer_NEA_Server.dll
+C:\Users\Matthew\Documents\NEARelease\Matthew_Tranmer_NEA_Server.deps.json
+C:\Users\Matthew\Documents\NEARelease\Matthew_Tranmer_NEA_Server.runtimeconfig.json
+C:\Users\Matthew\Documents\NEARelease\Matthew_Tranmer_NEA_Server.pdb
