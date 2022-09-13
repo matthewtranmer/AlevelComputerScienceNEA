@@ -4,6 +4,13 @@ namespace NEA_GUI
 {
     internal static class Functions
     {
+        //Restarts the application.
+        public static void fatalRestart()
+        {
+            Application.Restart();
+            Environment.Exit(0);
+        }
+
         //Displays an error with details if nessasary.
         public static void showError(string details = "")
         {

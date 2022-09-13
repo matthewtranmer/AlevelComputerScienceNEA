@@ -62,7 +62,7 @@ namespace NEA_GUI
                     if (response != null && response.ContainsKey("error"))
                     {
                         Functions.showError("Session Has Expired");
-                        fatalRestart();
+                        Functions.fatalRestart();
                     }
                 }
             }
@@ -70,7 +70,7 @@ namespace NEA_GUI
             {
                 //There has been an error with the heartbeat so restart.
                 Functions.showError("Heartbeat Error. The Application Will Now Restart.");
-                fatalRestart();
+                Functions.fatalRestart();
             }
         }
 
@@ -139,7 +139,7 @@ namespace NEA_GUI
                 //There has been an error with the management tunnel so restart.
                 Functions.showError("There was an error with the tunnel worker. The application will now restart.");
                 Functions.showError(e.ToString());
-                fatalRestart();
+                Functions.fatalRestart();
             }
         }
 
@@ -152,20 +152,13 @@ namespace NEA_GUI
             if (response != null && response.ContainsKey("error"))
             {
                 Functions.showError(response["error"]);
-                fatalRestart();
+                Functions.fatalRestart();
                 
                 return;
             }
 
             //Set managment_tunnel variable so it can be used elsewhere.
             ApplicationValues.managment_tunnel = socket!;
-        }
-
-        //Restarts the application.
-        private void fatalRestart()
-        {
-            Application.Restart();
-            Environment.Exit(0);
         }
 
         private void clearNotification(object? sender, EventArgs args)
@@ -336,7 +329,7 @@ namespace NEA_GUI
         private void deleteChatClick(object? sender, EventArgs e)
         {
             Button? button = (Button?)sender;
-            button?.Parent.Dispose();
+            Panel panel = button?.Parent;
         }
 
         private void inputBoxKeyDown(object sender, KeyEventArgs e)

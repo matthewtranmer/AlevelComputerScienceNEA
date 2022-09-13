@@ -24,15 +24,18 @@ namespace Matthew_Tranmer_NEA_Server
 
             Console.WriteLine("Server Started");
 
+
             //Create a connection to the database.
             using (MySqlConnection db = new MySqlConnection("server = localhost; userid = matthew; password = matthew; database = nea"))
             {
                 db.Open();
 
+                FriendGraph friend_storage = new FriendGraph(db);
+
                 //Private key used to sign header messages sent to the client.
                 BigInteger private_key = BigInteger.Parse("47563461030232379838018606969981225219051095905568807231097714174869457590584");
                 //Create a new worker.
-                APIworker worker = new APIworker(db, private_key);
+                APIworker worker = new APIworker(db, private_key, friend_storage);
 
                 while (true)
                 {

@@ -16,11 +16,13 @@ namespace Matthew_Tranmer_NEA_Server.Workers
         private MySqlConnection db;
         private BigInteger private_key;
         private System.Timers.Timer audit_timer;
+        private FriendGraph friend_storage;
 
-        public APIworker(MySqlConnection db, BigInteger private_key)
+        public APIworker(MySqlConnection db, BigInteger private_key, FriendGraph friend_storage)
         {
             this.db = db;
             this.private_key = private_key;
+            this.friend_storage = friend_storage;
 
             //Create a timer which will start the managment tunnel auditor every 30 seconds.
             audit_timer = new System.Timers.Timer(30000);
@@ -256,6 +258,16 @@ namespace Matthew_Tranmer_NEA_Server.Workers
 
                     case "\\api\\secrets\\upload_pre_key":
                         response = API.uploadPreKey(db, request["username"], request["token"], request["identifier"], request["encrypted_private_key"], request["encoded_public_key"]);
+                        break;
+
+                    //Friend endpoints.
+                    case "\\api\\friend\\send_friend_request":
+                        break;
+
+                    case "\\api\\friend\\accept_friend_request":
+                        break;
+
+                    case "\\api\\friend\\get_friends":
                         break;
 
                     //Message endpoints.
