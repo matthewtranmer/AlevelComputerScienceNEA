@@ -329,7 +329,7 @@ namespace NEA_GUI
         private void deleteChatClick(object? sender, EventArgs e)
         {
             Button? button = (Button?)sender;
-            Panel panel = button?.Parent;
+            Panel? panel = (Panel?)button?.Parent;
         }
 
         private void inputBoxKeyDown(object sender, KeyEventArgs e)

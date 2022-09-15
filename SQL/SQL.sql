@@ -229,6 +229,28 @@ CREATE TABLE oldmessages(
 
 
 
+
+CREATE TABLE friendgraphnodes(
+    NodeID INT AUTO_INCREMENT,
+    UserID INT UNIQUE,
+
+    PRIMARY KEY (NodeID),
+    FOREIGN KEY (UserID) REFERENCES users(UserID)
+);
+
+CREATE TABLE friendgraphlinks(
+    LinkID INT AUTO_INCREMENT,
+    NodeID INT,
+    FriendNodeID INT,
+
+    PRIMARY KEY (LinkID),
+    FOREIGN KEY (NodeID) REFERENCES friendgraphnodes(NodeID),
+    FOREIGN KEY (FriendNodeID) REFERENCES friendgraphnodes(NodeID)
+);
+
+
+
+
 SELECT ConversationID FROM conversations WHERE Source = (SELECT UserID FROM users WHERE Username = 'Matthew') AND Destination = (SELECT UserID FROM users WHERE Username = 'Mick')
 
 SELECT EXISTS(SELECT * FROM users WHERE Username = @username);

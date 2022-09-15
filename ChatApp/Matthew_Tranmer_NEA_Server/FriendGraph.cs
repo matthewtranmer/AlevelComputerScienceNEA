@@ -25,11 +25,11 @@ namespace Matthew_Tranmer_NEA_Server
 
         public FriendGraph(MySqlConnection db)
         {
-            Console.WriteLine("Creating Graph");
+            Program.Display("Creating Graph Storage", ConsoleColor.Green);
             this.db = db;
 
-            string cmd_txt = "SELECT Username FROM users WHERE UserID = (SELECT UserID FROM friendgraphnodes)";
-            MySqlCommand command = new MySqlCommand(cmd_txt);
+            string cmd_txt = "SELECT users.Username FROM users INNER JOIN friendgraphnodes ON friendgraphnodes.userID=users.UserID";
+            MySqlCommand command = new MySqlCommand(cmd_txt, db);
 
             lock (db)
             {
@@ -37,16 +37,18 @@ namespace Matthew_Tranmer_NEA_Server
                 {
                     while (reader.Read())
                     {
-                        GraphNode node = new GraphNode(reader.GetString(0));
+                        string username = reader.GetString(0);
+                        GraphNode node = new GraphNode(username);
                         nodes.Add(node);
+                        Program.Display("+ Added Node - Username: " + username, ConsoleColor.Green);
                     }
                 }
             }
 
             foreach (var node in nodes)
             {
-                cmd_txt = "SELECT Username FROM users WHERE UserID = (SELECT FriendNodeID FROM friendgraphlinks WHERE NodeID = (SELECT UserID FROM users WHERE Username = @username))";
-                command = new MySqlCommand(cmd_txt);
+                cmd_txt = "SELECT Username FROM users WHERE UserID = (SELECT UserID FROM friendgraphnodes WHERE NodeID = (SELECT FriendNodeID FROM friendgraphlinks WHERE NodeID = (SELECT NodeID FROM friendgraphnodes WHERE UserID = (SELECT UserID FROM users WHERE Username = @username))))";
+                command = new MySqlCommand(cmd_txt, db);
                 command.Parameters.AddWithValue("@username", node.username);
 
                 lock (db)
@@ -55,21 +57,25 @@ namespace Matthew_Tranmer_NEA_Server
                     {
                         while (reader.Read())
                         {
-                            addFriend(node.username, reader.GetString(0), false);
+                            string username = reader.GetString(0);
+                            addFriend(node.username, username, false);
+                            Program.Display("+ " + node.username + " is friends with " + username, ConsoleColor.Green);
                         }
                     }
                 }
             }
+
+            Program.Display("Graph Storage Created", ConsoleColor.Green);
         }
 
         public void createAccount(string username)
         {
             GraphNode new_user = new GraphNode(username);
 
-            string cmd_txt = "INSERT INTO friendgraphnodes (UserID) VALUES (SELECT UserID FROM users WHERE username = @username)";
-            MySqlCommand command = new MySqlCommand(cmd_txt);
+            string cmd_txt = "INSERT INTO friendgraphnodes SET UserID = (SELECT UserID FROM users WHERE Username = @username);";
+            MySqlCommand command = new MySqlCommand(cmd_txt, db);
             command.Parameters.AddWithValue("@username", username);
-            command.ExecuteNonQueryAsync();
+            command.ExecuteNonQuery();
 
             nodes.Add(new_user);
         }
@@ -88,13 +94,13 @@ namespace Matthew_Tranmer_NEA_Server
 
             if (insert_into_database)
             {
-                string cmd_txt = "INSERT INTO friendgraphlinks (NodeID, FriendNodeID) VALUES ( " +
-                "SELECT NodeID FROM friendgraphnodes WHERE UserID = (SELECT UserID FROM users WHERE username = @username), " +
-                "SELECT NodeID FROM friendgraphnodes WHERE UserID = (SELECT UserID FROM users WHERE username = @friend))";
-                MySqlCommand command = new MySqlCommand(cmd_txt);
+                string cmd_txt = "INSERT INTO friendgraphlinks (NodeID, FriendNodeID) VALUES (" +
+                    "(SELECT NodeID FROM friendgraphnodes WHERE UserID = (SELECT UserID FROM users WHERE Username = @username))," +
+                    "(SELECT NodeID FROM friendgraphnodes WHERE UserID = (SELECT UserID FROM users WHERE Username = @friend)))";
+                MySqlCommand command = new MySqlCommand(cmd_txt, db);
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@friend", friend);
-                command.ExecuteNonQueryAsync();
+                command.ExecuteNonQuery();
             }
 
             user_node.friends.Add(friend_node);
@@ -120,7 +126,6 @@ namespace Matthew_Tranmer_NEA_Server
                 {
                     friends.Add(node.username);
                 }
-
             }
 
             return friends;
@@ -141,5 +146,4 @@ namespace Matthew_Tranmer_NEA_Server
             user_node.friends.Remove(friend_node);
         }
     }
-    
 }

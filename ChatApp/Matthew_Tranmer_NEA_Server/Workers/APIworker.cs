@@ -34,6 +34,8 @@ namespace Matthew_Tranmer_NEA_Server.Workers
         //Event which will remove the unresponsive management tunnels from the list.
         private void managementTunnelAuditor(object? source, ElapsedEventArgs e)
         {
+            Program.Display("Tunnel Audit Started...", ConsoleColor.Cyan);
+
             const int seconds_till_timeout = 20;
             int removed_worker_count = 0;
             int index = 0;
@@ -57,7 +59,7 @@ namespace Matthew_Tranmer_NEA_Server.Workers
                 }
             }
 
-            Console.WriteLine($"Audit Complete. Workers Removed: {removed_worker_count}, Total Tunnels Open: {managment_tunnel_workers.Count}."); 
+            Program.Display($"Audit Complete. Workers Removed: {removed_worker_count}, Total Tunnels Open: {managment_tunnel_workers.Count}.", ConsoleColor.Cyan); 
         }
 
         //Start a new request worker in a new thread.
@@ -219,10 +221,10 @@ namespace Matthew_Tranmer_NEA_Server.Workers
             Dictionary<string, string> request = JsonSerializer.Deserialize<Dictionary<string, string>>(json_data);
 
             bool keep_alive = false;
-            Dictionary<string, string>? response;
+            Dictionary<string, string>? response = null;
             try
             {
-                Console.WriteLine(request!["URL"]);
+                Program.Display(request!["URL"], ConsoleColor.Red);
                 switch (request["URL"])
                 {
                     //Managment endpoints.
