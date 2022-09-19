@@ -45,29 +45,6 @@ namespace NEA_GUI
             ApplicationValues.identity_key = identity_key.getPrivateComponent();
             ApplicationValues.signed_pre_key = signed_pre_key.getPrivateComponent();
 
-            //Testing purposes only.
-            using (StreamWriter writer = new StreamWriter("signup_logs.txt", true))
-            {
-                writer.WriteLine(ApplicationValues.username + "----------------------------------");
-                writer.WriteLine("Identity Key: ");
-                writer.WriteLine(identity_key.getPrivateComponent().ToString());
-                writer.WriteLine("Identity Key Base64: ");
-                writer.WriteLine(encoded_private_identity_key);
-                writer.WriteLine("Encrypted Identity Key Base64: ");
-                writer.WriteLine(encrypted_indentity_key);
-
-                writer.WriteLine("-----------------------------------------------");
-
-                writer.WriteLine("Signed Pre Key: ");
-                writer.WriteLine(signed_pre_key.getPrivateComponent().ToString());
-                writer.WriteLine("Signed Pre Key Base64: ");
-                writer.WriteLine(encoded_private_signed_pre_key);
-                writer.WriteLine("Encrypted Signed Pre Key Base64: ");
-                writer.WriteLine(encrypted_signed_pre_key);
-
-                writer.WriteLine("-----------------------------------------------");
-            }
-
             //Produce a signature using the two keys so the server can't change the values.
             byte[] signature = EllipticCurveCryptography.generateDSAsignature(identity_key, signed_pre_key.getPublicComponent().getCoordinate().x.ToString()).ToArray();
             string encoded_signature = Convert.ToBase64String(signature);
@@ -112,33 +89,12 @@ namespace NEA_GUI
                     { "encoded_public_key", Convert.ToBase64String(key_pair.getPublicComponent().compressPoint()) }
                 };
 
-                //Testing purposes only.
-                using (StreamWriter writer = new StreamWriter("signup_logs.txt", true))
-                {
-                    writer.WriteLine("Pre Key Identifier: ");
-                    writer.WriteLine(pre_key.identifier);
-                    writer.WriteLine("Private Key:");
-                    writer.WriteLine(key_pair.getPrivateComponent());
-                    writer.WriteLine("Encoded Public Key: ");
-                    writer.WriteLine(Convert.ToBase64String(key_pair.getPublicComponent().compressPoint()));
-                    writer.WriteLine("Encrypted Private Key: ");
-                    writer.WriteLine(encrypted_private_key);
-                    writer.WriteLine("-----------------------------------------------");
-                }
-
                 //Send upload pre key request.
                 var response = API.apiRequest(pre_key_request);
                 if (response.fatal_error)
                 {
                     return response;
                 }
-            }
-
-            //Testing purposes only.
-            using (StreamWriter writer = new StreamWriter("signup_logs.txt", true))
-            {
-                writer.WriteLine();
-                writer.WriteLine();
             }
 
             return (null, false);

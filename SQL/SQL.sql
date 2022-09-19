@@ -1,93 +1,3 @@
-The client the performs an X3DH with the pre key bundle. 
-
-The pre key bundle contains: 
-The public identity key,
-The public signed pre key and the
-The ephemeral pre key
-
-Once the client generates the root key, it should generate a key pair, perform a diffie hellman and create a new chain key.  
-
-The chain key will then be used to derive the next chain and then the message will be encrypted.
-
-The client then will upload the encrypted message, the chain key, the private key
-
-
-
-PROBLEM TO SOLVE:
-how do we know if its the first message in a chain or not.
-
-LOGIC FOR SENDING MESSAGES
-Every time the first message in a chain is sent, they need to generate a new key pair.
-
-No Messages Whatsoever
-----------------------------------------------------------------------------------------------------
-If the chain keys table isn't populated with any of the conversations then return a pre key bundle. 
-The client will then generate X3DH constant, a key pair and then will encrypt their message.
-
-The client will return the encrypted message, the rachet private key, the rachet public key and the
-public ephemeral key.
-
-The server will then populate the X3DH handshake table. The "is next message in chain" flag should be
-set to true after this. The other parties flag should be set to false.
-
-
-
-Sending The First Message In A Chain
-----------------------------------------------------------------------------------------------------
-Send the client the chain key and the other parties public key.
-
-The client should then generate a new key pair, and then generate the encrypted message. 
-
-The client will return the encrypted message, and the private key.
-
-The "is next message in chain" flag should be set to true after this. The other parties flag should
-be set to false.
-
-
-Sending A Message Within A Chain
-----------------------------------------------------------------------------------------------------
-Send the client the chain key and the sequence count.
-
-The client will then encrypt the message.
-
-The client will then return the encrypted message.
-
-
-
-LOGIC FOR RECIEVING MESSAGES
-
-Recieving The First Message Ever
-----------------------------------------------------------------------------------------------------
-Send the client the senders public X3DH values which consists of: the public identity key, the public
-ephemeral key. Also, send the client the pre-key identifier and the time the message was sent.
-
-The client will then decrypt the message and display it. After this, the client will then upload the 
-the encrypted message to the server so that it can be stored in the old messages table.
-
-
-
-Receiving The First Message In A Chain
-----------------------------------------------------------------------------------------------------
-Send the client the encrypted message, the private key, the chain key and the other parties public key.
-
-The client will then decrypt the message and display it. The client will upload the new chain key to the
-server. After this, the client will then upload the encrypted the encrypted message to the server so that
-it can be stored in the old messages table.
-
-
-
-Recieving A Message Within A Chain
-----------------------------------------------------------------------------------------------------
-Send the client the encrypted message, the chain key and the sequence count. 
-
-The client will then decrypt the message and display it. The client will upload the new chain key to 
-the server. After this, the client will then upload the encrypted the encrypted message to the server
-so that it can be stored in the old messages table.
-
-
-
-
-
 CREATE TABLE users (
     UserID INT AUTO_INCREMENT,
     Username VARCHAR(255) UNIQUE NOT NULL,
@@ -248,7 +158,15 @@ CREATE TABLE friendgraphlinks(
     FOREIGN KEY (FriendNodeID) REFERENCES friendgraphnodes(NodeID)
 );
 
+CREATE TABLE friendrequests(
+    RequestID INT AUTO_INCREMENT,
+    Sender INT,
+    Recipient INT,
 
+    PRIMARY KEY (RequestID),
+    FOREIGN KEY (Sender) REFERENCES users(UserID),
+    FOREIGN KEY (Recipient) REFERENCES users(UserID)
+);
 
 
 SELECT ConversationID FROM conversations WHERE Source = (SELECT UserID FROM users WHERE Username = 'Matthew') AND Destination = (SELECT UserID FROM users WHERE Username = 'Mick')

@@ -59,7 +59,7 @@ namespace NEA_GUI
                 if (response != null && response.ContainsKey("error") && response["error"] == "Invalid Session Token")
                 {
                     Functions.showError("The session has expired, the application will now restart.");
-                    
+                    Functions.fatalRestart();
                 }
 
                 //Return the response body.

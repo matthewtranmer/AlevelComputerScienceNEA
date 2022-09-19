@@ -25,7 +25,6 @@ namespace Matthew_Tranmer_NEA_Server
 
         public FriendGraph(MySqlConnection db)
         {
-            Program.Display("Creating Graph Storage", ConsoleColor.Green);
             this.db = db;
 
             string cmd_txt = "SELECT users.Username FROM users INNER JOIN friendgraphnodes ON friendgraphnodes.userID=users.UserID";
@@ -64,8 +63,6 @@ namespace Matthew_Tranmer_NEA_Server
                     }
                 }
             }
-
-            Program.Display("Graph Storage Created", ConsoleColor.Green);
         }
 
         public void createAccount(string username)
@@ -120,7 +117,7 @@ namespace Matthew_Tranmer_NEA_Server
                 }
             }
 
-            if (user_node.friends.Count > 0)
+            if (user_node!.friends.Count > 0)
             {
                 foreach (GraphNode node in user_node.friends)
                 {

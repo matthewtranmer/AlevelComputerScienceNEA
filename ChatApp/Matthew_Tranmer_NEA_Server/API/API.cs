@@ -209,7 +209,7 @@ namespace Matthew_Tranmer_NEA_Server
         }
 
         //Endpoint to create an account.  
-        public static Dictionary<string, string>? createAccount(MySqlConnection db, string username, string authentication_code)
+        public static Dictionary<string, string>? createAccount(MySqlConnection db, FriendGraph graph, string username, string authentication_code)
         {
             //Query the database to make sure the username isn't taken.
             string cmd_text = "SELECT EXISTS(SELECT * FROM users WHERE Username = @username);";
@@ -244,6 +244,8 @@ namespace Matthew_Tranmer_NEA_Server
             command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@authentication_code", authentication_code_hash);
             command.ExecuteNonQuery();
+
+            graph.createAccount(username);
 
             //Create a token.
             (string token, long expiration) = createToken(token_expiration);
@@ -950,5 +952,120 @@ namespace Matthew_Tranmer_NEA_Server
                 {"session_token", token }
             };
         }
+
+        public static Dictionary<string, string>? sendFriendRequest(MySqlConnection db, APIworker worker, string username, string token, string recipient)
+        {
+            //Make sure token is valid.
+            if (!authenticateRequest(db, username, token))
+            {
+                return new Dictionary<string, string>() { { "error", "Invalid Session Token" } };
+            }
+
+            string cmd_txt = "SELECT UserID FROM users WHERE Username = @recipient";
+            MySqlCommand command = new MySqlCommand(cmd_txt, db);
+            command.Parameters.AddWithValue("@recipient", recipient);
+
+            lock (db)
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return new Dictionary<string, string>() { { "fatal_error", "The username doesn't exist." } };
+                    }
+                }
+            }
+
+            cmd_txt = "SELECT requestID FROM friendrequests WHERE " + 
+                "Sender = (SELECT UserID FROM users WHERE Username = @Sender) AND " +
+                "Recipient = (SELECT UserID FROM users WHERE Username = @Recipient) " +
+                "LIMIT 1";
+            command = new MySqlCommand(cmd_txt, db);
+            command.Parameters.AddWithValue("@Sender", username);
+            command.Parameters.AddWithValue("@Recipient", recipient);
+
+            lock (db)
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            cmd_txt = "INSERT INTO friendrequests (Sender, Recipient) VALUES (" +
+                "(SELECT UserID FROM users WHERE Username = @Sender)," +
+                "(SELECT UserID FROM users WHERE Username = @Recipient))";
+            command = new MySqlCommand(cmd_txt, db);
+            command.Parameters.AddWithValue("@Sender", username);
+            command.Parameters.AddWithValue("@Recipient", recipient);
+            lock (db) command.ExecuteNonQuery();
+
+            Dictionary<string, string> request = new Dictionary<string, string>()
+            {
+                { "URL", "\\management_tunnel\\friend_request"},
+                { "requester", username }
+            };
+
+            worker.createManagmentRequest(recipient, request);
+            return null;
+        }
+
+        static public Dictionary<string, string>? acceptFriendRequest(MySqlConnection db, FriendGraph graph, string username, string token, string requester)
+        {
+            //Make sure token is valid.
+            if (!authenticateRequest(db, username, token))
+            {
+                return new Dictionary<string, string>() { { "error", "Invalid Session Token" } };
+            }
+
+            string cmd_txt = "DELETE FROM friendrequests WHERE Sender = (SELECT UserID FROM users WHERE username = @requester) AND Recipient = (SELECT UserID FROM users WHERE username = @username)";
+            MySqlCommand command = new MySqlCommand(cmd_txt, db);
+            command.Parameters.AddWithValue("@requester", requester);
+            command.Parameters.AddWithValue("@username", username);
+
+            graph.addFriend(username, requester);
+
+            return null;
+        }
+
+        static public Dictionary<string, string> getFriendsAndRequests(MySqlConnection db, FriendGraph graph, string username, string token)
+        {
+            //Make sure token is valid.
+            if (!authenticateRequest(db, username, token))
+            {
+                return new Dictionary<string, string>() { { "error", "Invalid Session Token" } };
+            }
+
+            string cmd_text = "SELECT Username FROM users WHERE UserID = (SELECT Sender FROM friendrequests WHERE Recipient = (SELECT UserID FROM users WHERE username = @username))";
+            MySqlCommand command = new MySqlCommand(cmd_text, db);
+            command.Parameters.AddWithValue("@username", username);
+
+            List<string> requests = new List<string>();
+
+            lock (db)
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        requests.Add(reader.GetString(0));
+                    }
+                }
+            }
+
+            List<string> friends = graph.getFriends(username);
+
+            Dictionary<string, string> response = new Dictionary<string, string>()
+            {
+                { "requests", JsonSerializer.Serialize(requests) },
+                { "friends", JsonSerializer.Serialize(friends) }
+            };
+
+            return response;
+        }
+
     }
 }

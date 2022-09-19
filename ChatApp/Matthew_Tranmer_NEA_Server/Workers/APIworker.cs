@@ -206,9 +206,12 @@ namespace Matthew_Tranmer_NEA_Server.Workers
         //Method that handles the request from the client.
         private void requestWorker(Socket raw_connection)
         {
+            Program.Display("Request Accepted", ConsoleColor.DarkYellow);
+
             //Set timeouts.
-            raw_connection.ReceiveTimeout = 1500;
-            raw_connection.SendTimeout = 1500;
+            const int timeout = 2000;
+            raw_connection.ReceiveTimeout = timeout;
+            raw_connection.SendTimeout = timeout;
 
             //Create encrypted socket wrapper.
             EncryptedSocketWrapper socket_wrapper = new EncryptedSocketWrapper(raw_connection);
@@ -218,7 +221,7 @@ namespace Matthew_Tranmer_NEA_Server.Workers
             string json_data = Encoding.UTF8.GetString(encoded_data);
 
             //Deserialize recieved data.
-            Dictionary<string, string> request = JsonSerializer.Deserialize<Dictionary<string, string>>(json_data);
+            Dictionary<string, string>? request = JsonSerializer.Deserialize<Dictionary<string, string>>(json_data);
 
             bool keep_alive = false;
             Dictionary<string, string>? response = null;
@@ -238,7 +241,7 @@ namespace Matthew_Tranmer_NEA_Server.Workers
                         break;
 
                     case "\\api\\management\\create_account":
-                        response = API.createAccount(db, request["username"], request["authentication_code"]);
+                        response = API.createAccount(db, friend_storage, request["username"], request["authentication_code"]);
                         break;
 
                     case "\\api\\management\\generate_token":
@@ -264,12 +267,15 @@ namespace Matthew_Tranmer_NEA_Server.Workers
 
                     //Friend endpoints.
                     case "\\api\\friend\\send_friend_request":
+                        response = API.sendFriendRequest(db, this, request["username"], request["token"], request["recipient"]);
                         break;
 
                     case "\\api\\friend\\accept_friend_request":
+                        response = API.acceptFriendRequest(db, friend_storage, request["username"], request["token"], request["requester"]);
                         break;
 
-                    case "\\api\\friend\\get_friends":
+                    case "\\api\\friend\\get_friends_and_requests":
+                        response = API.getFriendsAndRequests(db, friend_storage, request["username"], request["token"]);
                         break;
 
                     //Message endpoints.

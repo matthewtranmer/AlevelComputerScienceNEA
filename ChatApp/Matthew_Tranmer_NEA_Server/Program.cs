@@ -38,24 +38,22 @@ namespace Matthew_Tranmer_NEA_Server
                 db.Open();
                 Display("Database Connected", ConsoleColor.Blue);
 
-
+                Display("Creating Friend Graph Storage...", ConsoleColor.Green);
                 FriendGraph friend_storage = new FriendGraph(db);
+                Display("Friend Graph Storage Created", ConsoleColor.Green);
 
                 //Private key used to sign header messages sent to the client.
                 BigInteger private_key = BigInteger.Parse("47563461030232379838018606969981225219051095905568807231097714174869457590584");
                 //Create a new worker.
                 APIworker worker = new APIworker(db, private_key, friend_storage);
 
-                Display("Initialization Complete! Waiting For Requests.", ConsoleColor.Blue);
+                Display("Initialization Complete! Waiting For Requests...", ConsoleColor.Blue);
 
                 while (true)
                 {
                     try
                     {
                         Socket connection = socket.Accept();
-                        Display("Request Accepted", ConsoleColor.DarkYellow);
-
-
                         _ = worker.start(connection);
                     }
                     catch (Exception exeption)

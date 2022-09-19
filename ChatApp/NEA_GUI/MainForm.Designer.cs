@@ -32,7 +32,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.sortByDropdown = new System.Windows.Forms.ComboBox();
             this.NewChatBtn = new System.Windows.Forms.Button();
             this.messageBox = new System.Windows.Forms.ListBox();
@@ -81,7 +80,6 @@
             // 
             this.panel3.BackColor = System.Drawing.Color.DimGray;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.button1);
             this.panel3.Controls.Add(this.sortByDropdown);
             this.panel3.Controls.Add(this.NewChatBtn);
             this.panel3.Location = new System.Drawing.Point(2, 0);
@@ -89,23 +87,13 @@
             this.panel3.Size = new System.Drawing.Size(220, 68);
             this.panel3.TabIndex = 0;
             // 
-            // button1
-            // 
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Location = new System.Drawing.Point(12, 39);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(82, 25);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Friends";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // sortByDropdown
             // 
             this.sortByDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.sortByDropdown.FormattingEnabled = true;
-            this.sortByDropdown.Location = new System.Drawing.Point(100, 40);
+            this.sortByDropdown.Location = new System.Drawing.Point(11, 40);
             this.sortByDropdown.Name = "sortByDropdown";
-            this.sortByDropdown.Size = new System.Drawing.Size(106, 23);
+            this.sortByDropdown.Size = new System.Drawing.Size(195, 23);
             this.sortByDropdown.TabIndex = 2;
             // 
             // NewChatBtn
@@ -251,10 +239,11 @@
             // 
             // information_label
             // 
-            this.information_label.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.information_label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.information_label.Location = new System.Drawing.Point(230, 596);
             this.information_label.Name = "information_label";
-            this.information_label.Size = new System.Drawing.Size(773, 18);
+            this.information_label.Size = new System.Drawing.Size(777, 18);
             this.information_label.TabIndex = 10;
             // 
             // MainForm
@@ -306,7 +295,6 @@
         private Panel panel4;
         private Label label2;
         private ComboBox sortByDropdown;
-        private Button button1;
         private Label information_label;
         private Button clearAllButton;
     }

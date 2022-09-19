@@ -40,3 +40,4 @@ C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\bin\Debug\net6
 C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\bin\Debug\net6.0-windows\NEA_GUI.pdb
 C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net6.0-windows\NEA_GUI.genruntimeconfig.cache
 C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net6.0-windows\ref\NEA_GUI.dll
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net6.0-windows\NEA_GUI.Friends.resources

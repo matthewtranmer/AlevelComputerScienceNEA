@@ -128,6 +128,10 @@ namespace NEA_GUI
                             
                             break;
 
+                        case "\\management_tunnel\\friend_request":
+                            Invoke(() => createNotification($"{request["requester"]} sent you a friend request"));
+                            break;
+
                         default:
                             Functions.showError("URL was not found");
                             break;
@@ -344,6 +348,11 @@ namespace NEA_GUI
         private void clearAllButton_Click(object sender, EventArgs e)
         {
             notificationFlowLayoutPanel.Controls.Clear();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
