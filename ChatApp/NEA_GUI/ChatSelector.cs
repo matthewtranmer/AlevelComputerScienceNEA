@@ -103,7 +103,7 @@ namespace NEA_GUI
 
             Button accept_button = new Button();
             accept_button.Text = "Accept Request";
-            accept_button.Click += (s, e) => acceptRequest(s, username);
+            accept_button.Click += (s, e) => acceptRequest(username, s);
             accept_button.Parent = request_panel;
             accept_button.AutoSize = true;
 

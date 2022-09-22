@@ -140,22 +140,14 @@ CREATE TABLE oldmessages(
 
 
 
-CREATE TABLE friendgraphnodes(
-    NodeID INT AUTO_INCREMENT,
-    UserID INT UNIQUE,
-
-    PRIMARY KEY (NodeID),
-    FOREIGN KEY (UserID) REFERENCES users(UserID)
-);
-
 CREATE TABLE friendgraphlinks(
     LinkID INT AUTO_INCREMENT,
     NodeID INT,
     FriendNodeID INT,
 
     PRIMARY KEY (LinkID),
-    FOREIGN KEY (NodeID) REFERENCES friendgraphnodes(NodeID),
-    FOREIGN KEY (FriendNodeID) REFERENCES friendgraphnodes(NodeID)
+    FOREIGN KEY (NodeID) REFERENCES users(UserID),
+    FOREIGN KEY (FriendNodeID) REFERENCES users(UserID)
 );
 
 CREATE TABLE friendrequests(

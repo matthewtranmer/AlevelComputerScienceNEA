@@ -1,0 +1,13 @@
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.csproj.AssemblyReference.cache
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.csproj.SuggestedBindingRedirects.cache
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.ChatSelector.resources
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.Friends.resources
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.Login.resources
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.MainForm.resources
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.Properties.Resources.resources
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.SignUp.resources
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.csproj.GenerateResource.cache
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.AssemblyInfoInputs.cache
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.AssemblyInfo.cs
+C:\Users\Matthew\Desktop\AlevelComputerScienceNEA\ChatApp\NEA_GUI\obj\Debug\net45\NEA_GUI.csproj.CoreCompileInputs.cache
