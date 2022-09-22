@@ -1025,8 +1025,10 @@ namespace Matthew_Tranmer_NEA_Server
             MySqlCommand command = new MySqlCommand(cmd_txt, db);
             command.Parameters.AddWithValue("@requester", requester);
             command.Parameters.AddWithValue("@username", username);
+            lock (db) command.ExecuteNonQuery();
 
             graph.addFriend(username, requester);
+            graph.addFriend(requester, username);
 
             return null;
         }
@@ -1056,12 +1058,30 @@ namespace Matthew_Tranmer_NEA_Server
                 }
             }
 
+            cmd_text = "SELECT Username FROM users WHERE UserID = (SELECT Recipient FROM friendrequests WHERE Sender = (SELECT UserID FROM users WHERE username = @username))";
+            command = new MySqlCommand(cmd_text, db);
+            command.Parameters.AddWithValue("@username", username);
+
+            List<string> sent_requests = new List<string>();
+
+            lock (db)
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        sent_requests.Add(reader.GetString(0));
+                    }
+                }
+            }
+
             List<string> friends = graph.getFriends(username);
 
             Dictionary<string, string> response = new Dictionary<string, string>()
             {
                 { "requests", JsonSerializer.Serialize(requests) },
-                { "friends", JsonSerializer.Serialize(friends) }
+                { "friends", JsonSerializer.Serialize(friends) },
+                { "sent_requests", JsonSerializer.Serialize(sent_requests) }
             };
 
             return response;

@@ -13,7 +13,6 @@ namespace NEA_GUI
 
         private void returnUsername(string username)
         {
-            Functions.showError(username);
             selected_username = username;
             DialogResult = DialogResult.OK;
             Close();
@@ -53,8 +52,21 @@ namespace NEA_GUI
             create_chat_button.Location = point;
         }
 
-        private void acceptRequest(string username)
+        bool has_friends = true;
+
+        private void acceptRequest(string username, object? sender)
         {
+            Button? button = sender as Button;
+            button?.Parent.Dispose();
+
+            if (!has_friends)
+            {
+                friendsFlowLayoutPanel.Controls.Clear();
+                has_friends = true;
+            }
+
+            addFriend(username);
+
             Dictionary<string, string> request = new Dictionary<string, string>()
             {
                 { "URL", "\\api\\friend\\accept_friend_request" },
@@ -69,8 +81,8 @@ namespace NEA_GUI
         private void addRequest(string username)
         {
             Panel request_panel = new Panel();
-            request_panel.Width = requestsFlowLayoutPanel.Width - 8;
-            request_panel.Parent = requestsFlowLayoutPanel;
+            request_panel.Width = requestsRecievedFlowLayoutPanel.Width - 8;
+            request_panel.Parent = requestsRecievedFlowLayoutPanel;
             request_panel.BackColor = Color.LightGray;
             request_panel.Height = 70;
             request_panel.Cursor = Cursors.Hand;
@@ -91,13 +103,36 @@ namespace NEA_GUI
 
             Button accept_button = new Button();
             accept_button.Text = "Accept Request";
-            accept_button.Click += (s, e) => acceptRequest(username);
+            accept_button.Click += (s, e) => acceptRequest(s, username);
             accept_button.Parent = request_panel;
             accept_button.AutoSize = true;
 
             point = accept_button.Location;
             point.Offset(40, 37);
             accept_button.Location = point;
+        }
+
+        private void addRequestSent(string username)
+        {
+            Panel request_panel = new Panel();
+            request_panel.Width = requestsSentFlowLayoutPanel.Width - 8;
+            request_panel.Parent = requestsSentFlowLayoutPanel;
+            request_panel.BackColor = Color.LightGray;
+            request_panel.Height = 50;
+
+            Label name = new Label();
+            name.Text = username;
+            name.Parent = request_panel;
+
+            Point point = name.Location;
+            point.Offset(0, 10);
+            name.Location = point;
+
+            name.Width = request_panel.Width;
+            name.TextAlign = ContentAlignment.MiddleCenter;
+            name.AutoSize = false;
+            name.Cursor = Cursors.Hand;
+            name.AutoEllipsis = true;
         }
 
         private void ChatSelector_Load(object sender, EventArgs e)
@@ -113,7 +148,6 @@ namespace NEA_GUI
             if (fatal_error) return;
             
             List<string>? friends = JsonSerializer.Deserialize<List<string>>(response!["friends"]);
-            //List<string>? friends = new List<string>() { "Matthew", "Mick" };
             if (friends != null && friends.Count > 0)
             {
                 foreach (string friend in friends)
@@ -123,18 +157,11 @@ namespace NEA_GUI
             }
             else
             {
-                Label label = new Label();
-                label.Text = "You have no friends";
-                label.Height = 40;
-                label.Width = friendsFlowLayoutPanel.Width - 6;
-                label.AutoSize = false;
-                label.TextAlign = ContentAlignment.MiddleCenter;
-
-                friendsFlowLayoutPanel.Controls.Add(label);
+                has_friends = false;
+                setNoFriends();
             }
 
             List<string>? requests = JsonSerializer.Deserialize<List<string>>(response!["requests"]);
-            //List<string>? requests = new List<string>() { "Matthew", "Mick" };
             if (requests != null && requests.Count > 0)
             {
                 foreach (string friend_request in requests)
@@ -144,21 +171,75 @@ namespace NEA_GUI
             }
             else
             {
-                Label label = new Label();
-                label.Text = "You have no friend requests";
-                label.Height = 40;
-                label.Width = friendsFlowLayoutPanel.Width - 6;
-                label.AutoSize = false;
-                label.TextAlign = ContentAlignment.MiddleCenter;
+                setNoFriendRequestRecieved();
+            }
 
-                requestsFlowLayoutPanel.Controls.Add(label);
+            List<string>? sent_requests = JsonSerializer.Deserialize<List<string>>(response!["sent_requests"]);
+            if (sent_requests != null && sent_requests.Count > 0)
+            {
+                foreach (string sent_request in sent_requests)
+                {
+                    addRequestSent(sent_request);
+                }
+            }
+            else
+            {
+                has_requests_sent = false;
+                setNoFriendRequestSent();
             }
         }
+
+        public void setNoFriends()
+        {
+            Label label = new Label();
+            label.Text = "You have no friends";
+            label.Height = 40;
+            label.Width = friendsFlowLayoutPanel.Width - 6;
+            label.AutoSize = false;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+
+            friendsFlowLayoutPanel.Controls.Add(label);
+        }
+
+        private void setNoFriendRequestRecieved()
+        {
+            Label label = new Label();
+            label.Text = "You have no recieved friend requests";
+            label.Height = 50;
+            label.Width = friendsFlowLayoutPanel.Width - 6;
+            label.AutoSize = false;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+
+            requestsRecievedFlowLayoutPanel.Controls.Add(label);
+        }
+
+        private void setNoFriendRequestSent()
+        {
+            Label label = new Label();
+            label.Text = "You have no sent friend requests";
+            label.Height = 50;
+            label.Width = friendsFlowLayoutPanel.Width - 6;
+            label.AutoSize = false;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+
+            requestsSentFlowLayoutPanel.Controls.Add(label);
+            has_requests_sent = false;
+        }
+
+        bool has_requests_sent = true;
 
         private void sendRequestButton_Click(object sender, EventArgs e)
         {
             string recipient = usernameInput.Text;
             usernameInput.Clear();
+
+            if (!has_requests_sent)
+            {
+                requestsSentFlowLayoutPanel.Controls.Clear();
+                has_requests_sent = true;
+            }
+
+            addRequestSent(recipient);
 
             Dictionary<string, string> request = new Dictionary<string, string>()
             {

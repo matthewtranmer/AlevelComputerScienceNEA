@@ -11,7 +11,10 @@ namespace NEA_GUI
 {
     internal static class API
     {
+        //10.144.197.214
         private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 9921);
+        //private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 10, 144, 197, 214 }), 9921);
+
 
         private static Dictionary<string, string>? sendRequest(Socket socket, Dictionary<string, string> request)
         {
@@ -41,8 +44,9 @@ namespace NEA_GUI
             {
                 //Create a socket.
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.ReceiveTimeout = 1000;
-                socket.SendTimeout = 1000;
+                const int timeout = 5000;
+                socket.ReceiveTimeout = timeout;
+                socket.SendTimeout = timeout;
 
                 //Connect the socket to the server.
                 socket.Connect(end_point);
