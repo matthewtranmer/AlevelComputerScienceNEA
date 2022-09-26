@@ -37,7 +37,6 @@
             this.messageBox = new System.Windows.Forms.ListBox();
             this.Send_Button = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.Active_Chat_Status = new System.Windows.Forms.Label();
             this.Active_Chat_Username = new System.Windows.Forms.Label();
             this.ChatsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.left_panel = new System.Windows.Forms.Panel();
@@ -137,22 +136,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.LightGray;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.Active_Chat_Status);
             this.panel2.Controls.Add(this.Active_Chat_Username);
             this.panel2.Location = new System.Drawing.Point(226, 83);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(781, 47);
             this.panel2.TabIndex = 5;
-            // 
-            // Active_Chat_Status
-            // 
-            this.Active_Chat_Status.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Active_Chat_Status.AutoSize = true;
-            this.Active_Chat_Status.Location = new System.Drawing.Point(734, 16);
-            this.Active_Chat_Status.Name = "Active_Chat_Status";
-            this.Active_Chat_Status.Size = new System.Drawing.Size(42, 15);
-            this.Active_Chat_Status.TabIndex = 1;
-            this.Active_Chat_Status.Text = "Online";
             // 
             // Active_Chat_Username
             // 
@@ -285,7 +273,6 @@
         private Button Send_Button;
         private Panel panel2;
         private Label Active_Chat_Username;
-        private Label Active_Chat_Status;
         private Panel panel3;
         private FlowLayoutPanel ChatsPanel;
         private Panel left_panel;

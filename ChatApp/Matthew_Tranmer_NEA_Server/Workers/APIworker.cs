@@ -278,6 +278,14 @@ namespace Matthew_Tranmer_NEA_Server.Workers
                         response = API.getFriendsAndRequests(db, friend_storage, request["username"], request["token"]);
                         break;
 
+                    case "\\api\\friend\\get_opened_chats":
+                        response = API.getOpenedChats(db, request["username"], request["token"]);
+                        break;
+
+                    case "\\api\\friend\\set_open_chat":
+                        response = API.setOpenChat(db, request["username"], request["token"], request["recipient"]);
+                        break;
+
                     //Message endpoints.
                     case "\\api\\message\\request_message_send":
                         response = API.requestMessageSend(this, db, request["username"], request["token"], request["recipient_username"]);

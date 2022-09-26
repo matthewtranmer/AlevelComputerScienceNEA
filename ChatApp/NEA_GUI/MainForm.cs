@@ -103,12 +103,25 @@ namespace NEA_GUI
                     {
                         case "\\managment_tunnel\\message_ready":
                             Messaging.messageReady(this, request);
-                            
-                            if (current_recipient == request["sender"])
+                            string sender = request["sender"];
+
+                            if (current_recipient == sender)
                             {
                                 Invoke(() => information_label.Text = $"{current_recipient} is idle");
                                 message_recieved = true;
                                 Invoke(() => Send_Button.Enabled = true);
+                            }
+
+                            else
+                            {
+                                Invoke(() =>
+                                {
+                                    bool contains_chat = containsChat(sender);
+                                    if (!contains_chat)
+                                    {
+                                        addChat(sender);
+                                    }
+                                });
                             }
                                 
                             break;
@@ -233,7 +246,8 @@ namespace NEA_GUI
         private async void chatPanelClick(object? sender, EventArgs e)
         {
             Panel? panel = (Panel?)sender;
-            string username = panel!.GetChildAtPoint(new Point(4, 5)).Text;
+            //sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+            string username = panel!.GetChildAtPoint(new Point(1, 17)).Text;
 
             current_recipient = username;
             Active_Chat_Username.Text = username;
@@ -275,14 +289,17 @@ namespace NEA_GUI
             Send_Button.Enabled = true;
         }
 
+        List<string> opened_chats = new List<string>();
+
         private void addChat(string username)
         {
             Panel chat_panel = new Panel();
             chat_panel.Width = ChatsPanel.Width - 4;
             chat_panel.Parent = ChatsPanel;
             chat_panel.BackColor = Color.LightGray;
-            chat_panel.Height = 112;
+            chat_panel.Height = 50;
             chat_panel.Location = new Point(chat_panel.Location.X + 12, chat_panel.Location.Y);
+            chat_panel.BorderStyle = BorderStyle.FixedSingle;
 
             chat_panel.Click += chatPanelClick;
 
@@ -290,35 +307,33 @@ namespace NEA_GUI
             Random random = new Random();
             name.Text = username;
             name.Parent = chat_panel;
-            name.Location = new Point(4, 5);
-            name.Width = 200;
+            name.Location = new Point(1, 1);
+            name.AutoSize = false;
+            name.TextAlign = ContentAlignment.MiddleCenter;
+            name.Width = ChatsPanel.Width - 6;
+            name.Height = 49;
             name.AutoEllipsis = true;
 
             name.Click += usernameLabelClick;
 
-            RichTextBox last_message = new RichTextBox();
-            last_message.Text = "Last Message";
-            last_message.Parent = chat_panel;
-            last_message.Width = 200;
-            last_message.Height = 46;
-            last_message.Location = new Point(5, 28);
-            last_message.BorderStyle = BorderStyle.FixedSingle;
-            last_message.Enabled = false;
-            last_message.BackColor = chat_panel.BackColor;
-            last_message.BorderStyle = BorderStyle.None;
-            last_message.ScrollBars = RichTextBoxScrollBars.None;
+            opened_chats.Add(username);
 
-            Button delete_chat = new Button();
-            delete_chat.Text = "Delete Chat";
-            delete_chat.Width = 204;
-            delete_chat.Height = 25;
-            delete_chat.Parent = chat_panel;
-            delete_chat.BackColor = Color.WhiteSmoke;
-            delete_chat.Location = new Point(4, 80);
-
-            delete_chat.Click += deleteChatClick;
         }
 
+        private bool containsChat(string username)
+        {
+            foreach (string name in opened_chats)
+            {
+                if (username == name)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        
         private void NewChatBtnClick(object sender, EventArgs e)
         {
             ChatSelector chatSelector = new ChatSelector();
@@ -326,14 +341,16 @@ namespace NEA_GUI
 
             if (result == DialogResult.OK)
             {
-                addChat(chatSelector.selected_username);
-            }
-        }
+                if (!containsChat(chatSelector.selected_username))
+                {
+                    addChat(chatSelector.selected_username);
 
-        private void deleteChatClick(object? sender, EventArgs e)
-        {
-            Button? button = (Button?)sender;
-            Panel? panel = (Panel?)button?.Parent;
+                    int index = ChatsPanel.Controls.Count - 1;
+                    chatPanelClick(ChatsPanel.Controls[index], e);   
+                }
+
+                
+            }
         }
 
         private void inputBoxKeyDown(object sender, KeyEventArgs e)

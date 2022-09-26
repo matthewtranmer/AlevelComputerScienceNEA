@@ -161,6 +161,18 @@ CREATE TABLE friendrequests(
 );
 
 
+
+CREATE TABLE openedchats(
+    ChatID INT AUTO_INCREMENT,
+    OwnerID INT,
+    RecipientID INT,
+
+    PRIMARY KEY (ChatID),
+    FOREIGN KEY (OwnerID) REFERENCES users(UserID),
+    FOREIGN KEY (RecipientID) REFERENCES users(UserID)
+);
+
+
 SELECT ConversationID FROM conversations WHERE Source = (SELECT UserID FROM users WHERE Username = 'Matthew') AND Destination = (SELECT UserID FROM users WHERE Username = 'Mick')
 
 SELECT EXISTS(SELECT * FROM users WHERE Username = @username);

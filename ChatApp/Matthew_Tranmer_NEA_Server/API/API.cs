@@ -1087,5 +1087,15 @@ namespace Matthew_Tranmer_NEA_Server
             return response;
         }
 
+
+        static public Dictionary<string, string> getOpenedChats(MySqlConnection db, string username, string token)
+        {
+
+        }
+
+        static public Dictionary<string, string> setOpenChat(MySqlConnection db, string username, string token, string recipient)
+        {
+
+        }
     }
 }
