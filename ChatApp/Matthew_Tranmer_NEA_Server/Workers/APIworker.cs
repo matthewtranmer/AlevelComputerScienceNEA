@@ -282,10 +282,6 @@ namespace Matthew_Tranmer_NEA_Server.Workers
                         response = API.getOpenedChats(db, request["username"], request["token"]);
                         break;
 
-                    case "\\api\\friend\\set_open_chat":
-                        response = API.setOpenChat(db, request["username"], request["token"], request["recipient"]);
-                        break;
-
                     //Message endpoints.
                     case "\\api\\message\\request_message_send":
                         response = API.requestMessageSend(this, db, request["username"], request["token"], request["recipient_username"]);
@@ -299,7 +295,6 @@ namespace Matthew_Tranmer_NEA_Server.Workers
                         response = API.recieveMessage(db, request["username"], request["token"], request["sender"]);
                         break;
 
-                        
                     case "\\api\\message\\upload_old_message":
                         response = API.uploadOldMessage(db, request["username"], request["token"], request["sender"], request["recipient"], request);
                         break;

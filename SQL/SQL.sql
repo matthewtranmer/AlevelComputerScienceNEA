@@ -166,6 +166,7 @@ CREATE TABLE openedchats(
     ChatID INT AUTO_INCREMENT,
     OwnerID INT,
     RecipientID INT,
+    LastMessage DATETIME,
 
     PRIMARY KEY (ChatID),
     FOREIGN KEY (OwnerID) REFERENCES users(UserID),
@@ -178,4 +179,4 @@ SELECT ConversationID FROM conversations WHERE Source = (SELECT UserID FROM user
 SELECT EXISTS(SELECT * FROM users WHERE Username = @username);
 
 
-INSERT INTO messages (TimeSent) VALUES (SELECT CURRENT_TIMESTAMP)
+INSERT INTO messages (TimeSent) VALUES (CURRENT_TIMESTAMP())

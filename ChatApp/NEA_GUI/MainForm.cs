@@ -5,8 +5,6 @@ using Matthew_Tranmer_NEA.Networking;
 using Matthew_Tranmer_NEA.Generic;
 using System.Timers;
 
-
-
 namespace NEA_GUI
 {
     public partial class MainForm : Form
@@ -33,6 +31,53 @@ namespace NEA_GUI
             sortByDropdown.Items.Add("A to Z");
             sortByDropdown.Items.Add("Z to A");
             sortByDropdown.SelectedIndex = 0;
+            sortByDropdown.SelectedIndexChanged += onDropdownChange;
+
+            openOldChats();
+        }
+
+        int current_dropdown_index = 0;
+
+        private void onDropdownChange(object? sender, EventArgs args)
+        {
+            if (sortByDropdown.SelectedIndex != current_dropdown_index)
+            {
+                current_dropdown_index = sortByDropdown.SelectedIndex;
+                ChatsPanel.Controls.Clear();
+                switch (sortByDropdown.Items[sortByDropdown.SelectedIndex])
+                {
+                    case "A to Z":
+                        
+                        
+                }
+            }
+        }
+
+        private void openOldChats()
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>()
+            {
+                { "URL", "\\api\\friend\\get_opened_chats" },
+                { "username", ApplicationValues.username },
+                { "token", ApplicationValues.session_token }
+            };
+
+            (Dictionary<string, string>? response, bool fatal_error) = API.apiRequest(request);
+            if (fatal_error) Functions.fatalRestart();
+
+            List<Dictionary<string, string>>? chats = JsonSerializer.Deserialize<List<Dictionary<string, string>>?>(response!["chats"]);
+            
+            if (chats != null)
+            {
+                foreach (Dictionary<string, string> chat in chats)
+                {
+                    string encoded_time = chat["last_message"];
+                    DateTime time = new DateTime(Convert.ToInt64(encoded_time));
+                    string username = chat["recipient"];
+                    
+                    addChat(username, time);
+                }
+            }
         }
 
         //Thread which sends a heartbeat request to the server every 10 seconds.
@@ -246,7 +291,6 @@ namespace NEA_GUI
         private async void chatPanelClick(object? sender, EventArgs e)
         {
             Panel? panel = (Panel?)sender;
-            //sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
             string username = panel!.GetChildAtPoint(new Point(1, 17)).Text;
 
             current_recipient = username;
@@ -289,9 +333,30 @@ namespace NEA_GUI
             Send_Button.Enabled = true;
         }
 
-        List<string> opened_chats = new List<string>();
+        List<Message> opened_chats = new List<Message>();
 
-        private void addChat(string username)
+        struct Message
+        {
+            public string username;
+            public Panel panel;
+            public DateTime? last_message;
+
+            public Message(string username, Panel panel)
+            {
+                this.username = username;
+                this.panel = panel;
+                last_message = DateTime.Now;
+            }
+
+            public Message(string username, Panel panel, DateTime? last_message)
+            {
+                this.username = username;
+                this.panel = panel;
+                this.last_message = last_message;
+            }
+        }
+
+        private void addChat(string username, DateTime? last_message = null)
         {
             Panel chat_panel = new Panel();
             chat_panel.Width = ChatsPanel.Width - 4;
@@ -316,15 +381,25 @@ namespace NEA_GUI
 
             name.Click += usernameLabelClick;
 
-            opened_chats.Add(username);
+            Message message;
+            if (last_message != null)
+            {
+                message = new Message(username, chat_panel, last_message);
+            }
+            else
+            {
+                message = new Message(username, chat_panel);
+            }
+            
+            opened_chats.Add(message);
 
         }
 
         private bool containsChat(string username)
         {
-            foreach (string name in opened_chats)
+            foreach (Message message in opened_chats)
             {
-                if (username == name)
+                if (username == message.username)
                 {
                     return true;
                 }
@@ -348,8 +423,6 @@ namespace NEA_GUI
                     int index = ChatsPanel.Controls.Count - 1;
                     chatPanelClick(ChatsPanel.Controls[index], e);   
                 }
-
-                
             }
         }
 

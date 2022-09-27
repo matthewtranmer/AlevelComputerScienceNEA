@@ -59,9 +59,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(214, 0);
+            this.panel1.Location = new System.Drawing.Point(245, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1002, 71);
+            this.panel1.Size = new System.Drawing.Size(1145, 95);
             this.panel1.TabIndex = 1;
             // 
             // label1
@@ -69,9 +70,9 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(842, 15);
+            this.label1.Location = new System.Drawing.Point(962, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(136, 37);
+            this.label1.Size = new System.Drawing.Size(167, 46);
             this.label1.TabIndex = 0;
             this.label1.Text = "Chat App";
             // 
@@ -82,25 +83,28 @@
             this.panel3.Controls.Add(this.sortByDropdown);
             this.panel3.Controls.Add(this.NewChatBtn);
             this.panel3.Location = new System.Drawing.Point(2, 0);
+            this.panel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(220, 68);
+            this.panel3.Size = new System.Drawing.Size(251, 90);
             this.panel3.TabIndex = 0;
             // 
             // sortByDropdown
             // 
             this.sortByDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.sortByDropdown.FormattingEnabled = true;
-            this.sortByDropdown.Location = new System.Drawing.Point(11, 40);
+            this.sortByDropdown.Location = new System.Drawing.Point(13, 53);
+            this.sortByDropdown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.sortByDropdown.Name = "sortByDropdown";
-            this.sortByDropdown.Size = new System.Drawing.Size(195, 23);
+            this.sortByDropdown.Size = new System.Drawing.Size(222, 28);
             this.sortByDropdown.TabIndex = 2;
             // 
             // NewChatBtn
             // 
             this.NewChatBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.NewChatBtn.Location = new System.Drawing.Point(11, 5);
+            this.NewChatBtn.Location = new System.Drawing.Point(13, 7);
+            this.NewChatBtn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.NewChatBtn.Name = "NewChatBtn";
-            this.NewChatBtn.Size = new System.Drawing.Size(195, 29);
+            this.NewChatBtn.Size = new System.Drawing.Size(223, 39);
             this.NewChatBtn.TabIndex = 1;
             this.NewChatBtn.Text = "Create New Chat";
             this.NewChatBtn.UseVisualStyleBackColor = true;
@@ -113,18 +117,20 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messageBox.FormattingEnabled = true;
             this.messageBox.HorizontalScrollbar = true;
-            this.messageBox.ItemHeight = 15;
-            this.messageBox.Location = new System.Drawing.Point(226, 136);
+            this.messageBox.ItemHeight = 20;
+            this.messageBox.Location = new System.Drawing.Point(258, 181);
+            this.messageBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.messageBox.Name = "messageBox";
-            this.messageBox.Size = new System.Drawing.Size(781, 454);
+            this.messageBox.Size = new System.Drawing.Size(892, 604);
             this.messageBox.TabIndex = 0;
             // 
             // Send_Button
             // 
             this.Send_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Send_Button.Location = new System.Drawing.Point(887, 617);
+            this.Send_Button.Location = new System.Drawing.Point(1014, 823);
+            this.Send_Button.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Send_Button.Name = "Send_Button";
-            this.Send_Button.Size = new System.Drawing.Size(116, 56);
+            this.Send_Button.Size = new System.Drawing.Size(133, 75);
             this.Send_Button.TabIndex = 4;
             this.Send_Button.Text = "Send";
             this.Send_Button.UseVisualStyleBackColor = true;
@@ -137,17 +143,18 @@
             this.panel2.BackColor = System.Drawing.Color.LightGray;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.Active_Chat_Username);
-            this.panel2.Location = new System.Drawing.Point(226, 83);
+            this.panel2.Location = new System.Drawing.Point(258, 111);
+            this.panel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(781, 47);
+            this.panel2.Size = new System.Drawing.Size(892, 62);
             this.panel2.TabIndex = 5;
             // 
             // Active_Chat_Username
             // 
             this.Active_Chat_Username.AutoSize = true;
-            this.Active_Chat_Username.Location = new System.Drawing.Point(3, 16);
+            this.Active_Chat_Username.Location = new System.Drawing.Point(3, 21);
             this.Active_Chat_Username.Name = "Active_Chat_Username";
-            this.Active_Chat_Username.Size = new System.Drawing.Size(0, 15);
+            this.Active_Chat_Username.Size = new System.Drawing.Size(0, 20);
             this.Active_Chat_Username.TabIndex = 0;
             // 
             // ChatsPanel
@@ -155,9 +162,10 @@
             this.ChatsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.ChatsPanel.BackColor = System.Drawing.Color.DimGray;
-            this.ChatsPanel.Location = new System.Drawing.Point(0, 71);
+            this.ChatsPanel.Location = new System.Drawing.Point(0, 95);
+            this.ChatsPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ChatsPanel.Name = "ChatsPanel";
-            this.ChatsPanel.Size = new System.Drawing.Size(222, 608);
+            this.ChatsPanel.Size = new System.Drawing.Size(254, 811);
             this.ChatsPanel.TabIndex = 1;
             // 
             // left_panel
@@ -168,18 +176,20 @@
             this.left_panel.Controls.Add(this.panel3);
             this.left_panel.Controls.Add(this.ChatsPanel);
             this.left_panel.Location = new System.Drawing.Point(-2, 0);
+            this.left_panel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.left_panel.Name = "left_panel";
-            this.left_panel.Size = new System.Drawing.Size(222, 679);
+            this.left_panel.Size = new System.Drawing.Size(254, 905);
             this.left_panel.TabIndex = 6;
             // 
             // Input_Box
             // 
             this.Input_Box.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Input_Box.Location = new System.Drawing.Point(226, 617);
+            this.Input_Box.Location = new System.Drawing.Point(258, 823);
+            this.Input_Box.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Input_Box.Multiline = true;
             this.Input_Box.Name = "Input_Box";
-            this.Input_Box.Size = new System.Drawing.Size(655, 56);
+            this.Input_Box.Size = new System.Drawing.Size(748, 73);
             this.Input_Box.TabIndex = 7;
             this.Input_Box.KeyDown += new System.Windows.Forms.KeyEventHandler(this.inputBoxKeyDown);
             // 
@@ -189,9 +199,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.notificationFlowLayoutPanel.AutoScroll = true;
             this.notificationFlowLayoutPanel.BackColor = System.Drawing.Color.DimGray;
-            this.notificationFlowLayoutPanel.Location = new System.Drawing.Point(1013, 130);
+            this.notificationFlowLayoutPanel.Location = new System.Drawing.Point(1158, 173);
+            this.notificationFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.notificationFlowLayoutPanel.Name = "notificationFlowLayoutPanel";
-            this.notificationFlowLayoutPanel.Size = new System.Drawing.Size(203, 549);
+            this.notificationFlowLayoutPanel.Size = new System.Drawing.Size(232, 732);
             this.notificationFlowLayoutPanel.TabIndex = 8;
             // 
             // panel4
@@ -200,16 +211,18 @@
             this.panel4.BackColor = System.Drawing.Color.DimGray;
             this.panel4.Controls.Add(this.clearAllButton);
             this.panel4.Controls.Add(this.label2);
-            this.panel4.Location = new System.Drawing.Point(1013, 71);
+            this.panel4.Location = new System.Drawing.Point(1158, 95);
+            this.panel4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(203, 59);
+            this.panel4.Size = new System.Drawing.Size(232, 79);
             this.panel4.TabIndex = 9;
             // 
             // clearAllButton
             // 
-            this.clearAllButton.Location = new System.Drawing.Point(63, 29);
+            this.clearAllButton.Location = new System.Drawing.Point(72, 39);
+            this.clearAllButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.clearAllButton.Name = "clearAllButton";
-            this.clearAllButton.Size = new System.Drawing.Size(77, 22);
+            this.clearAllButton.Size = new System.Drawing.Size(88, 29);
             this.clearAllButton.TabIndex = 1;
             this.clearAllButton.Text = "Clear All";
             this.clearAllButton.UseVisualStyleBackColor = true;
@@ -219,9 +232,9 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(43, 3);
+            this.label2.Location = new System.Drawing.Point(49, 4);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(123, 25);
+            this.label2.Size = new System.Drawing.Size(152, 32);
             this.label2.TabIndex = 0;
             this.label2.Text = "Notifications";
             // 
@@ -229,17 +242,17 @@
             // 
             this.information_label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.information_label.Location = new System.Drawing.Point(230, 596);
+            this.information_label.Location = new System.Drawing.Point(263, 795);
             this.information_label.Name = "information_label";
-            this.information_label.Size = new System.Drawing.Size(777, 18);
+            this.information_label.Size = new System.Drawing.Size(888, 24);
             this.information_label.TabIndex = 10;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Silver;
-            this.ClientSize = new System.Drawing.Size(1216, 678);
+            this.ClientSize = new System.Drawing.Size(1390, 904);
             this.Controls.Add(this.information_label);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.notificationFlowLayoutPanel);
@@ -250,7 +263,8 @@
             this.Controls.Add(this.Send_Button);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(600, 600);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MinimumSize = new System.Drawing.Size(683, 784);
             this.Name = "MainForm";
             this.Text = "Chat App";
             this.panel1.ResumeLayout(false);

@@ -412,6 +412,8 @@ namespace Matthew_Tranmer_NEA_Server
 
                     uploadChainKeys(db, request_data["encrypted_chain_key"], request_data["encrypted_ratchet_private_key"], request_data["public_ratchet_key"], conversationID);
                     uploadX3DHhandshake(db, request_data["public_ephemeral_key"], request_data["prekey_identity"], conversationID);
+
+                    createChat(db, username, recipient_username);
                     break;
 
                 case "first_in_chain":
@@ -448,6 +450,8 @@ namespace Matthew_Tranmer_NEA_Server
             command.Parameters.AddWithValue("@ConversationID", conversationID);
 
             lock (db) command.ExecuteNonQuery();
+
+            updateChatLastMessage(db, username, recipient_username);
 
             Dictionary<string, string> management_request = new Dictionary<string, string>()
             {
@@ -676,6 +680,8 @@ namespace Matthew_Tranmer_NEA_Server
                             response["public_sender_ID"] = reader.GetString(3);
                         }
                     }
+
+                    createChat(db, username, sender);
                     break;
 
                 case "first_in_chain":
@@ -727,9 +733,10 @@ namespace Matthew_Tranmer_NEA_Server
                         }
                     }
                     response["sequence_count"] = Convert.ToString(sequence_count);
+
                     break;
             }
-
+            updateChatLastMessage(db, username, sender);
             return response;
         }
 
@@ -1087,15 +1094,76 @@ namespace Matthew_Tranmer_NEA_Server
             return response;
         }
 
+        static private void createChat(MySqlConnection db, string username, string recipient)
+        {
+            string cmd_txt = "INSERT INTO openedchats (OwnerID, RecipientID, LastMessage) VALUES (" +
+                "(SELECT UserID FROM users WHERE Username = @username)," +
+                "(SELECT UserID FROM users WHERE Username = @recipient)," +
+                "CURRENT_TIMESTAMP())";
+
+            MySqlCommand command = new MySqlCommand(cmd_txt, db);
+            command.Parameters.AddWithValue("@username", username);
+            command.Parameters.AddWithValue("@recipient", recipient);
+            lock (db) command.ExecuteNonQuery();
+        }
+
+        static private void updateChatLastMessage(MySqlConnection db, string username, string recipient)
+        {
+            string cmd_txt = "UPDATE openedchats SET LastMessage = CURRENT_TIMESTAMP() WHERE " +
+                "OwnerID = (SELECT UserID FROM users WHERE Username = @username) AND " +
+                "RecipientID = (SELECT UserID FROM users WHERE Username = @recipient)";
+
+            MySqlCommand command = new MySqlCommand(cmd_txt, db);
+            command.Parameters.AddWithValue("@username", username);
+            command.Parameters.AddWithValue("@recipient", recipient);
+            lock (db) command.ExecuteNonQuery();
+        }
 
         static public Dictionary<string, string> getOpenedChats(MySqlConnection db, string username, string token)
         {
+            //Make sure token is valid.
+            if (!authenticateRequest(db, username, token))
+            {
+                return new Dictionary<string, string>() { { "error", "Invalid Session Token" } };
+            }
 
-        }
+            string cmd_text = "SELECT users.Username, openedchats.LastMessage FROM users " +
+                "INNER JOIN openedchats ON OpenedChats.RecipientID = users.UserID " +
+                "WHERE OwnerID = (SELECT UserID FROM users WHERE username = @username) " +
+                "ORDER BY openedchats.LastMessage";
 
-        static public Dictionary<string, string> setOpenChat(MySqlConnection db, string username, string token, string recipient)
-        {
+            MySqlCommand command = new MySqlCommand(cmd_text, db);
+            command.Parameters.AddWithValue("@username", username);
 
+            List<Dictionary<string, string>> chats = new List<Dictionary<string, string>>();
+
+            lock (db)
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string recipient_username = reader.GetString(0);
+                        DateTime last_message = reader.GetDateTime(1);
+                        string encoded_time = last_message.Ticks.ToString();
+
+                        Dictionary<string, string> chat = new Dictionary<string, string>()
+                        {
+                            { "recipient", recipient_username },
+                            { "last_message", encoded_time }
+                        };
+
+                        chats.Add(chat);
+                    }
+                }
+            }
+
+            Dictionary<string, string> response = new Dictionary<string, string>() 
+            {
+                { "chats", JsonSerializer.Serialize(chats) }
+            };
+
+            return response;
         }
     }
 }
