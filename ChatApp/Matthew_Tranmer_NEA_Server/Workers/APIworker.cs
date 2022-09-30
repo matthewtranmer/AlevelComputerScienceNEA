@@ -198,7 +198,7 @@ namespace Matthew_Tranmer_NEA_Server.Workers
             cmd_text = "DELETE FROM managementrequests WHERE Recipient = @Recipient";
             cmd = new MySqlCommand(cmd_text, db);
             cmd.Parameters.AddWithValue("@Recipient", UserID);
-            cmd.ExecuteNonQuery();
+            lock (db) cmd.ExecuteNonQuery();
 
             return null;
         }
@@ -209,135 +209,137 @@ namespace Matthew_Tranmer_NEA_Server.Workers
             Program.Display("Request Accepted", ConsoleColor.DarkYellow);
 
             //Set timeouts.
-            const int timeout = 10000;
+            const int timeout = 11000;
             raw_connection.ReceiveTimeout = timeout;
             raw_connection.SendTimeout = timeout;
 
             //Create encrypted socket wrapper.
-            EncryptedSocketWrapper socket_wrapper = new EncryptedSocketWrapper(raw_connection);
+            EncryptedSocketWrapper socket_wrapper = new EncryptedSocketWrapper(raw_connection, private_key);
 
-            //Recieve encrypted headers.
-            byte[] encoded_data = socket_wrapper.recieveSigned(private_key);
-            string json_data = Encoding.UTF8.GetString(encoded_data);
-
-            //Deserialize recieved data.
-            Dictionary<string, string>? request = JsonSerializer.Deserialize<Dictionary<string, string>>(json_data);
-
-            bool keep_alive = false;
-            Dictionary<string, string>? response = null;
-            try
+            while (true)
             {
-                Program.Display(request!["URL"], ConsoleColor.Red);
-                switch (request["URL"])
+                //Recieve encrypted headers.
+                byte[] encoded_data = socket_wrapper.recieve();
+                string json_data = Encoding.UTF8.GetString(encoded_data);
+
+                //Deserialize recieved data.
+                Dictionary<string, string>? request = JsonSerializer.Deserialize<Dictionary<string, string>>(json_data);
+
+                bool keep_alive = false;
+                Dictionary<string, string>? response = null;
+                try
                 {
-                    //Managment endpoints.
-                    case "\\api\\management\\management_tunnel":
-                        response = createManagmentTunnel(raw_connection, socket_wrapper, request["username"], request["token"]);
-                        if (response == null) keep_alive = true;
-                        break;
+                    Program.Display(request!["URL"], ConsoleColor.Red);
+                    switch (request["URL"])
+                    {
+                        //Managment endpoints.
+                        case "\\api\\management\\management_tunnel":
+                            response = createManagmentTunnel(raw_connection, socket_wrapper, request["username"], request["token"]);
+                            if (response == null) keep_alive = true;
+                            break;
 
-                    case "\\api\\management\\heartbeat":
-                        response = API.managmentHeartbeat(db, managment_tunnel_workers, request["username"], request["token"]);
-                        break;
+                        case "\\api\\management\\heartbeat":
+                            response = API.managmentHeartbeat(db, managment_tunnel_workers, request["username"], request["token"]);
+                            break;
 
-                    case "\\api\\management\\create_account":
-                        response = API.createAccount(db, friend_storage, request["username"], request["authentication_code"]);
-                        break;
+                        case "\\api\\management\\create_account":
+                            response = API.createAccount(db, friend_storage, request["username"], request["authentication_code"]);
+                            break;
 
-                    case "\\api\\management\\generate_token":
-                        response = API.generateToken(db, request["username"], request["authentication_code"]);
-                        break;
+                        case "\\api\\management\\generate_token":
+                            response = API.generateToken(db, request["username"], request["authentication_code"]);
+                            break;
 
-                    //Secrets endpoints.
-                    case "\\api\\secrets\\download_private_keys":
-                        response = API.downloadPrivateKeys(db, request["username"], request["token"]);
-                        break;
+                        //Secrets endpoints.
+                        case "\\api\\secrets\\download_private_keys":
+                            response = API.downloadPrivateKeys(db, request["username"], request["token"]);
+                            break;
 
-                    case "\\api\\secrets\\upload_initial_keys":
-                        response = API.uploadInitialKeys(db, request["username"], request["token"], request["private_identity_key"], request["public_identity_key"], request["private_signed_pre_key"], request["public_signed_pre_key"], request["pre_key_signature"]);
-                        break;
+                        case "\\api\\secrets\\upload_initial_keys":
+                            response = API.uploadInitialKeys(db, request["username"], request["token"], request["private_identity_key"], request["public_identity_key"], request["private_signed_pre_key"], request["public_signed_pre_key"], request["pre_key_signature"]);
+                            break;
 
-                    case "\\api\\secrets\\download_pre_keys":
-                        response = API.downloadPreKeys(db, request["username"], request["token"]);
-                        break;
+                        case "\\api\\secrets\\download_pre_keys":
+                            response = API.downloadPreKeys(db, request["username"], request["token"]);
+                            break;
 
-                    case "\\api\\secrets\\upload_pre_key":
-                        response = API.uploadPreKey(db, request["username"], request["token"], request["identifier"], request["encrypted_private_key"], request["encoded_public_key"]);
-                        break;
+                        case "\\api\\secrets\\upload_pre_key":
+                            response = API.uploadPreKey(db, request["username"], request["token"], request["identifier"], request["encrypted_private_key"], request["encoded_public_key"]);
+                            break;
 
-                    //Friend endpoints.
-                    case "\\api\\friend\\send_friend_request":
-                        response = API.sendFriendRequest(db, this, request["username"], request["token"], request["recipient"]);
-                        break;
+                        //Friend endpoints.
+                        case "\\api\\friend\\send_friend_request":
+                            response = API.sendFriendRequest(db, this, request["username"], request["token"], request["recipient"]);
+                            break;
 
-                    case "\\api\\friend\\accept_friend_request":
-                        response = API.acceptFriendRequest(db, friend_storage, request["username"], request["token"], request["requester"]);
-                        break;
+                        case "\\api\\friend\\accept_friend_request":
+                            response = API.acceptFriendRequest(db, friend_storage, request["username"], request["token"], request["requester"]);
+                            break;
 
-                    case "\\api\\friend\\get_friends_and_requests":
-                        response = API.getFriendsAndRequests(db, friend_storage, request["username"], request["token"]);
-                        break;
+                        case "\\api\\friend\\get_friends_and_requests":
+                            response = API.getFriendsAndRequests(db, friend_storage, request["username"], request["token"]);
+                            break;
 
-                    case "\\api\\friend\\get_opened_chats":
-                        response = API.getOpenedChats(db, request["username"], request["token"]);
-                        break;
+                        case "\\api\\friend\\get_opened_chats":
+                            response = API.getOpenedChats(db, request["username"], request["token"]);
+                            break;
 
-                    //Message endpoints.
-                    case "\\api\\message\\request_message_send":
-                        response = API.requestMessageSend(this, db, request["username"], request["token"], request["recipient_username"]);
-                        break;
+                        //Message endpoints.
+                        case "\\api\\message\\request_message_send":
+                            response = API.requestMessageSend(this, db, request["username"], request["token"], request["recipient_username"]);
+                            break;
 
-                    case "\\api\\message\\send_message":
-                        response = API.sendMessage(this, db, request["username"], request["token"], request["recipient_username"], request["encrypted_message"], request);
-                        break;
+                        case "\\api\\message\\send_message":
+                            response = API.sendMessage(this, db, request["username"], request["token"], request["recipient_username"], request["encrypted_message"], request);
+                            break;
 
-                    case "\\api\\message\\recieve_message":
-                        response = API.recieveMessage(db, request["username"], request["token"], request["sender"]);
-                        break;
+                        case "\\api\\message\\recieve_message":
+                            response = API.recieveMessage(db, request["username"], request["token"], request["sender"]);
+                            break;
 
-                    case "\\api\\message\\upload_old_message":
-                        response = API.uploadOldMessage(db, request["username"], request["token"], request["sender"], request["recipient"], request);
-                        break;
+                        case "\\api\\message\\upload_old_message":
+                            response = API.uploadOldMessage(db, request["username"], request["token"], request["sender"], request["recipient"], request);
+                            break;
 
-                    case "\\api\\message\\download_old_messages":
-                        response = API.downloadOldMessages(db, request["username"], request["token"], request["recipient"]);
-                        break;
-                    
-                    default:
-                        response = new Dictionary<string, string>()
+                        case "\\api\\message\\download_old_messages":
+                            response = API.downloadOldMessages(db, request["username"], request["token"], request["recipient"]);
+                            break;
+
+                        default:
+                            response = new Dictionary<string, string>()
                         {
                             { "fatal_error", $"The requested endpoint URL ('{request["URL"]}') does not exist." }
                         };
-                        break;
+                            break;
+                    }
                 }
-            }
-            catch (KeyNotFoundException e)
-            {
-                Console.WriteLine(e);
-
-                response = new Dictionary<string, string>()
+                catch (KeyNotFoundException e)
                 {
-                    { "fatal_error", "A required key was not sent in the JSON object." }
-                };
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
+                    Console.WriteLine(e);
 
-                response = new Dictionary<string, string>()
+                    response = new Dictionary<string, string>()
+                    {
+                        { "fatal_error", "A required key was not sent in the JSON object." }
+                    };
+                }
+                catch (Exception e)
                 {
-                    { "fatal_error", "A Server Side Error Has Occured." }
-                };
-            }
+                    Console.WriteLine(e);
 
-            if (!keep_alive)
-            {   
+                    response = new Dictionary<string, string>()
+                    {
+                        { "fatal_error", "A Server Side Error Has Occured." }
+                    };
+                }
+
+                if (keep_alive)
+                {
+                    break;
+                }
+
                 //Serialize and send response.
                 string json_response = JsonSerializer.Serialize(response);
                 socket_wrapper.send(Encoding.UTF8.GetBytes(json_response));
-
-                //Close connection because it isn't needed anymore.
-                raw_connection.Close();
             }
         }
     }

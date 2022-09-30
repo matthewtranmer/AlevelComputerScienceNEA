@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
+using System.Timers;
 
 using Matthew_Tranmer_NEA.Generic;
 using Matthew_Tranmer_NEA.Networking;
@@ -14,20 +15,20 @@ namespace NEA_GUI
         //10.144.197.214
         private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 9921);
         //private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 10, 144, 197, 214 }), 9921);
+        private static System.Timers.Timer keep_alive_timer = new System.Timers.Timer(10500);
+        
+        private static EncryptedSocketWrapper? wrapper = null;
 
-
-        private static Dictionary<string, string>? sendRequest(Socket socket, Dictionary<string, string> request)
+        private static void keepAliveTimeout(object? s, EventArgs a)
         {
-            //Create the public key.
-            Coordinate signature_pk_coord = new Coordinate(BigInteger.Parse("89630596470571539848842129232432250117878455304252638950051962197460885296971"), BigInteger.Parse("81151631255409626093048500128742932208733034782939337963036891136896518229386"));
-            EllipticCurvePoint public_key = new EllipticCurvePoint(signature_pk_coord, PreDefinedCurves.nist256);
+            wrapper = null;
+        }
 
-            //Create an encrypted socket wrapper over the socket.
-            EncryptedSocketWrapper socket_wrapper = new EncryptedSocketWrapper(socket);
-
+        private static Dictionary<string, string>? sendRequest(EncryptedSocketWrapper socket_wrapper, Dictionary<string, string> request)
+        {
             //Serialize the request body and send it encrypted to the server.
             string json_request = JsonSerializer.Serialize(request);
-            socket_wrapper.sendSigned(Encoding.UTF8.GetBytes(json_request), public_key);
+            socket_wrapper.send(Encoding.UTF8.GetBytes(json_request));
 
             //Recieve the JSON response body.
             string json_response = Encoding.UTF8.GetString(socket_wrapper.recieve());
@@ -42,16 +43,33 @@ namespace NEA_GUI
         {
             try
             {
-                //Create a socket.
-                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                const int timeout = 5000;
-                socket.ReceiveTimeout = timeout;
-                socket.SendTimeout = timeout;
+                lock (keep_alive_timer)
+                {
+                    if (wrapper == null)
+                    {
+                        //Create a socket.
+                        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        const int timeout = 5000;
+                        socket.ReceiveTimeout = timeout;
+                        socket.SendTimeout = timeout;
 
-                //Connect the socket to the server.
-                socket.Connect(end_point);
+                        //Connect the socket to the server.
+                        socket.Connect(end_point);
 
-                Dictionary<string, string>? response = sendRequest(socket, request);
+                        //Create an encrypted socket wrapper over the socket.
+                        wrapper = new EncryptedSocketWrapper(socket, ApplicationValues.server_pk);
+
+                        keep_alive_timer.Stop();
+                        keep_alive_timer.Start();
+                    }
+                    else
+                    {
+                        keep_alive_timer.Stop();
+                        keep_alive_timer.Start();
+                    }
+                }
+
+                Dictionary<string, string>? response = sendRequest(wrapper, request);
 
                 //If the server returns a fatal error, then show an error popup.
                 if (response != null && response.ContainsKey("fatal_error"))
@@ -76,7 +94,7 @@ namespace NEA_GUI
             }
         }
 
-        public static (Dictionary<string, string>? response, Socket? socket) createManagmentTunnel()
+        public static (Dictionary<string, string>? response, EncryptedSocketWrapper socket_wrapper) createManagmentTunnel()
         {
             //Create a socket.
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -92,8 +110,11 @@ namespace NEA_GUI
                 { "token",  ApplicationValues.session_token },
             };
 
-            Dictionary<string, string>? response = sendRequest(socket, request);
-            return (response, socket);
+            //Create an encrypted socket wrapper over the socket.
+            EncryptedSocketWrapper socket_wrapper = new EncryptedSocketWrapper(socket, ApplicationValues.server_pk);
+
+            Dictionary<string, string>? response = sendRequest(socket_wrapper, request);
+            return (response, socket_wrapper);
         }
     }
 }

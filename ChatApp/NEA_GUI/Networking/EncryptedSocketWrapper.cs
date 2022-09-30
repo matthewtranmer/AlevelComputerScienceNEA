@@ -9,11 +9,18 @@ namespace Matthew_Tranmer_NEA.Networking
     class EncryptedSocketWrapper
     {
         Socket raw_socket;
+        string encryption_key;
 
-        //Creates a socket wrapper with a public signature key used to verify messages from the other party.
-        public EncryptedSocketWrapper(Socket raw_socket)
+        public EncryptedSocketWrapper(Socket raw_socket, BigInteger private_key)
         {
             this.raw_socket = raw_socket;
+            encryption_key = recvHandshakeSigned(private_key);
+        }
+
+        public EncryptedSocketWrapper(Socket raw_socket, EllipticCurvePoint public_key)
+        {
+            this.raw_socket = raw_socket;
+            encryption_key = sendHandshakeSigned(public_key);
         }
 
         //Send dictionary encoded using JSON.
@@ -29,30 +36,9 @@ namespace Matthew_Tranmer_NEA.Networking
         {
             //Recieve the signature and public key from the other party.
             string recieved_data = Encoding.UTF8.GetString(recvArbitary());
-            Dictionary<string, string> deserialized_payload = JsonSerializer.Deserialize<Dictionary<string, string>>(recieved_data);
+            Dictionary<string, string> deserialized_payload = JsonSerializer.Deserialize<Dictionary<string, string>>(recieved_data)!;
 
             return deserialized_payload;
-        }
-
-        //Used to generate a shared encryption key for the sender.
-        private string sendHandshake()
-        {
-            //Create a key pair which will be used to generate a shared secret.
-            KeyPair key_pair = new KeyPair(PreDefinedCurves.nist256);
-            string public_key = Convert.ToBase64String(key_pair.getPublicComponent().compressPoint());
-
-            Dictionary<string, string> payload = new Dictionary<string, string>()
-            {
-                { "public_key", public_key },
-            };
-
-            sendJSON(payload);
-
-            //Recieve the other parties public key to generate a shared secret.
-            Dictionary<string, string> deserialized_payload = recvJSON();
-
-            //Return shared encryption key.
-            return generateSecretSend(key_pair.getPrivateComponent(), deserialized_payload["public_key"]); ;
         }
 
         //Generate the secret using a diffie hellman when sending.
@@ -127,30 +113,6 @@ namespace Matthew_Tranmer_NEA.Networking
             //Return shared encryption key.
             return generateSecretSend(key_pair.getPrivateComponent(), deserialized_payload["public_key"]); ;
         }
-
-
-        //Used to generate a shared encryption key for the reciever.
-        private string recvHandshake()
-        {
-            //Recieve data to generate secret.
-            Dictionary<string, string> recieved_data = recvJSON();
-
-            //Generate a key pair to generate a shared secret.
-            KeyPair key_pair = new KeyPair(PreDefinedCurves.nist256);
-            string public_key = Convert.ToBase64String(key_pair.getPublicComponent().compressPoint());
-
-            Dictionary<string, string> payload = new Dictionary<string, string>()
-            {
-                { "public_key", public_key }
-            };
-
-            //Send the public key to the other party.
-            sendJSON(payload);
-
-            //Generate encryption key.
-            return generateSecretRecv(key_pair.getPrivateComponent(), recieved_data["public_key"]);
-        }
-
         
 
         //Sends a message with a content length header.
@@ -205,36 +167,16 @@ namespace Matthew_Tranmer_NEA.Networking
             return Convert.FromBase64String(Encryption.decrypt(encrypted_data, encryption_key));
         }
 
-        //Sends a signed encrypted message.
-        public void sendSigned(byte[] buffer, EllipticCurvePoint public_signature_key)
-        {
-            //Produce the shared secret key.
-            string encryption_key = sendHandshakeSigned(public_signature_key);
-            sendEncrypted(buffer, encryption_key);
-        }
-
-        //Recieves an encrypted message that has been digitally signed.
-        public byte[] recieveSigned(BigInteger private_signature_key)
-        {
-            //Produce the shared secret key.
-            string decryption_key = recvHandshakeSigned(private_signature_key);
-            return recieveEncrypted(decryption_key);
-        }
-
         //Sends an encrypted message.
         public void send(byte[] buffer)
         {
-            //Produce the shared secret key.
-            string encryption_key = sendHandshake();
             sendEncrypted(buffer, encryption_key);
         }
 
         //Recieves an encrypted message.
         public byte[] recieve()
         {
-            //Produce the shared secret key.
-            string decryption_key = recvHandshake();
-            return recieveEncrypted(decryption_key);
+            return recieveEncrypted(encryption_key);
         }
     }
 }

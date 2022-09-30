@@ -158,7 +158,7 @@ namespace NEA_GUI
             try
             {
                 //Create encrypted socket wrapper to recieve encrypted messages from the server.
-                EncryptedSocketWrapper wrapper = new EncryptedSocketWrapper(ApplicationValues.managment_tunnel);
+                EncryptedSocketWrapper wrapper = ApplicationValues.managment_tunnel;
 
                 while (true)
                 {
@@ -245,7 +245,7 @@ namespace NEA_GUI
         private void createManagementTunnel()
         {
             //Make a request to the server to create a sustained connection.
-            (Dictionary<string, string>? response, Socket? socket) = API.createManagmentTunnel();
+            (Dictionary<string, string>? response, EncryptedSocketWrapper socket_wrapper) = API.createManagmentTunnel();
 
             if (response != null && response.ContainsKey("error"))
             {
@@ -256,7 +256,7 @@ namespace NEA_GUI
             }
 
             //Set managment_tunnel variable so it can be used elsewhere.
-            ApplicationValues.managment_tunnel = socket!;
+            ApplicationValues.managment_tunnel = socket_wrapper;
         }
 
         private void clearNotification(object? sender, EventArgs args)
