@@ -209,7 +209,7 @@ namespace Matthew_Tranmer_NEA_Server.Workers
             Program.Display("Request Accepted", ConsoleColor.DarkYellow);
 
             //Set timeouts.
-            const int timeout = 5000;
+            const int timeout = 10000;
             raw_connection.ReceiveTimeout = timeout;
             raw_connection.SendTimeout = timeout;
 

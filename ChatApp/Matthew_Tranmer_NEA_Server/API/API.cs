@@ -1048,7 +1048,9 @@ namespace Matthew_Tranmer_NEA_Server
                 return new Dictionary<string, string>() { { "error", "Invalid Session Token" } };
             }
 
-            string cmd_text = "SELECT Username FROM users WHERE UserID = (SELECT Sender FROM friendrequests WHERE Recipient = (SELECT UserID FROM users WHERE username = @username))";
+            string cmd_text = "SELECT users.Username FROM users " +
+                "INNER JOIN friendrequests ON users.UserID = friendrequests.Sender " +
+                "WHERE friendrequests.Recipient = (SELECT UserID FROM users WHERE Username = @username);";
             MySqlCommand command = new MySqlCommand(cmd_text, db);
             command.Parameters.AddWithValue("@username", username);
 
@@ -1065,7 +1067,9 @@ namespace Matthew_Tranmer_NEA_Server
                 }
             }
 
-            cmd_text = "SELECT Username FROM users WHERE UserID = (SELECT Recipient FROM friendrequests WHERE Sender = (SELECT UserID FROM users WHERE username = @username))";
+            cmd_text = "SELECT users.Username FROM users " +
+                "INNER JOIN friendrequests ON users.UserID = friendrequests.Recipient " +
+                "WHERE friendrequests.Sender = (SELECT UserID FROM users WHERE Username = @username)";
             command = new MySqlCommand(cmd_text, db);
             command.Parameters.AddWithValue("@username", username);
 

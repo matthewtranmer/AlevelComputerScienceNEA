@@ -4,3 +4,4 @@ delete from messages;
 delete from oldmessages;
 delete from conversations;
 delete from managementrequests;
+delete from openedchats;

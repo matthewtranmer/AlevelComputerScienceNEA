@@ -25,9 +25,7 @@ namespace Matthew_Tranmer_NEA_Server
             //Create a socket.
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ep = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 9921);
-
             //IPEndPoint ep = new IPEndPoint(new IPAddress(new byte[] { 10, 144, 197, 214 }), 9921);
-
 
             //Bind the socket to the address and set it to listen mode.
             socket.Bind(ep);

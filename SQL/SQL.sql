@@ -180,3 +180,6 @@ SELECT EXISTS(SELECT * FROM users WHERE Username = @username);
 
 
 INSERT INTO messages (TimeSent) VALUES (CURRENT_TIMESTAMP())
+
+
+SELECT users.Username, openedchats.LastMessage FROM users INNER JOIN openedchats ON OpenedChats.RecipientID = users.UserID WHERE UserID = (SELECT UserID FROM users WHERE username = "Matthew") ORDER BY openedchats.LastMessage;

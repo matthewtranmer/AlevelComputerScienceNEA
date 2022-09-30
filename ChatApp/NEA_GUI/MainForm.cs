@@ -14,14 +14,14 @@ namespace NEA_GUI
 
         public MainForm()
         {
+            InitializeComponent();
+
             //Create Tunnel.
             createManagementTunnel();
 
             //Start Threads.
             Task.Factory.StartNew(managmentTunnelWorker);
             Task.Factory.StartNew(createHeartbeat);
-
-            InitializeComponent();
 
             Text += $" - {ApplicationValues.username}";  
 
@@ -44,11 +44,34 @@ namespace NEA_GUI
             {
                 current_dropdown_index = sortByDropdown.SelectedIndex;
                 ChatsPanel.Controls.Clear();
+
+                List<Message>? result = null;
                 switch (sortByDropdown.Items[sortByDropdown.SelectedIndex])
                 {
                     case "A to Z":
-                        
-                        
+                        result = Sorting.RecursiveMergeSortAtoZ(opened_chats);
+                        break;
+
+                    case "Z to A":
+                        result = Sorting.RecursiveMergeSortAtoZ(opened_chats);
+                        result.Reverse();
+                        break;
+
+                    case "Last Message":
+                        result = Sorting.RecursiveMergeSortOldestMessage(opened_chats);
+                        result.Reverse();
+                        break;
+
+                    case "Oldest Message":
+                        result = Sorting.RecursiveMergeSortOldestMessage(opened_chats);
+                        break;
+                }
+
+                opened_chats.Clear();
+
+                foreach (Message message in result!)
+                {
+                    addChat(message.username, message.last_message);
                 }
             }
         }
@@ -123,7 +146,7 @@ namespace NEA_GUI
         {
             if (!message_recieved)
             {
-                Send_Button.Enabled = true;
+                Invoke(() => Send_Button.Enabled = true);
             }
         }
 
@@ -143,6 +166,11 @@ namespace NEA_GUI
                     string json_data = Encoding.UTF8.GetString(wrapper.recieve());
                     Dictionary<string, string>? request = JsonSerializer.Deserialize<Dictionary<string, string>>(json_data);
 
+                    while (!IsHandleCreated)
+                    {
+                        Thread.Sleep(1);
+                    }
+
                     //Decode request.
                     switch (request!["URL"])
                     {
@@ -150,24 +178,32 @@ namespace NEA_GUI
                             Messaging.messageReady(this, request);
                             string sender = request["sender"];
 
-                            if (current_recipient == sender)
+                            Invoke(() =>
                             {
-                                Invoke(() => information_label.Text = $"{current_recipient} is idle");
-                                message_recieved = true;
-                                Invoke(() => Send_Button.Enabled = true);
-                            }
-
-                            else
-                            {
-                                Invoke(() =>
+                                if (current_recipient == sender)
                                 {
-                                    bool contains_chat = containsChat(sender);
-                                    if (!contains_chat)
+                                    information_label.Text = $"{current_recipient} is idle";
+                                    message_recieved = true;
+                                    Send_Button.Enabled = true;
+                                }
+                                    
+                                bool contains_chat = containsChat(sender);
+                                if (!contains_chat)
+                                {
+                                    addChat(sender);
+                                }
+
+                                for (int i = 0; i < opened_chats.Count; i++)
+                                {
+                                    if (opened_chats[i].username == sender)
                                     {
-                                        addChat(sender);
+                                        Message message = opened_chats[i];
+                                        message.last_message = DateTime.Now;
+                                        opened_chats[i] = message;
+                                        break;
                                     }
-                                });
-                            }
+                                }
+                            });
                                 
                             break;
 
@@ -328,14 +364,25 @@ namespace NEA_GUI
             Input_Box.Clear();
 
             createMessageBox(message, ApplicationValues.username);
-            
+
+            for (int i = 0; i < opened_chats.Count; i++)
+            {
+                if (opened_chats[i].username == recipent)
+                {
+                    Message message_struct = opened_chats[i];
+                    message_struct.last_message = DateTime.Now;
+                    opened_chats[i] = message_struct;
+                    break;
+                }
+            }
+
             await Task.Factory.StartNew(() => Messaging.sendMessage(message, recipent));
             Send_Button.Enabled = true;
         }
 
         List<Message> opened_chats = new List<Message>();
 
-        struct Message
+        public struct Message
         {
             public string username;
             public Panel panel;
