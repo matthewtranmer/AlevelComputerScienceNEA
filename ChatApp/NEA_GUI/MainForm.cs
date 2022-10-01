@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -26,8 +27,6 @@ namespace NEA_GUI
             Text += $" - {ApplicationValues.username}";  
 
             //Initialize dropdownbox.
-            sortByDropdown.Items.Add("Last Message");
-            sortByDropdown.Items.Add("Oldest Message");
             sortByDropdown.Items.Add("A to Z");
             sortByDropdown.Items.Add("Z to A");
             sortByDropdown.SelectedIndex = 0;
@@ -36,43 +35,29 @@ namespace NEA_GUI
             openOldChats();
         }
 
-        int current_dropdown_index = 0;
-
+        
         private void onDropdownChange(object? sender, EventArgs args)
         {
-            if (sortByDropdown.SelectedIndex != current_dropdown_index)
+            ChatsPanel.Controls.Clear();
+
+            List<Message>? result = null;
+            switch (sortByDropdown.Items[sortByDropdown.SelectedIndex])
             {
-                current_dropdown_index = sortByDropdown.SelectedIndex;
-                ChatsPanel.Controls.Clear();
+                case "A to Z":
+                    result = Sorting.RecursiveMergeSortAtoZ(opened_chats);
+                    break;
 
-                List<Message>? result = null;
-                switch (sortByDropdown.Items[sortByDropdown.SelectedIndex])
-                {
-                    case "A to Z":
-                        result = Sorting.RecursiveMergeSortAtoZ(opened_chats);
-                        break;
+                case "Z to A":
+                    result = Sorting.RecursiveMergeSortAtoZ(opened_chats);
+                    result.Reverse();
+                    break;
+            }
 
-                    case "Z to A":
-                        result = Sorting.RecursiveMergeSortAtoZ(opened_chats);
-                        result.Reverse();
-                        break;
+            opened_chats.Clear();
 
-                    case "Last Message":
-                        result = Sorting.RecursiveMergeSortOldestMessage(opened_chats);
-                        result.Reverse();
-                        break;
-
-                    case "Oldest Message":
-                        result = Sorting.RecursiveMergeSortOldestMessage(opened_chats);
-                        break;
-                }
-
-                opened_chats.Clear();
-
-                foreach (Message message in result!)
-                {
-                    addChat(message.username, message.last_message);
-                }
+            foreach (Message message in result!)
+            {
+                addChat(message.username);
             }
         }
 
@@ -94,11 +79,8 @@ namespace NEA_GUI
             {
                 foreach (Dictionary<string, string> chat in chats)
                 {
-                    string encoded_time = chat["last_message"];
-                    DateTime time = new DateTime(Convert.ToInt64(encoded_time));
                     string username = chat["recipient"];
-                    
-                    addChat(username, time);
+                    addChat(username);
                 }
             }
         }
@@ -191,17 +173,6 @@ namespace NEA_GUI
                                 if (!contains_chat)
                                 {
                                     addChat(sender);
-                                }
-
-                                for (int i = 0; i < opened_chats.Count; i++)
-                                {
-                                    if (opened_chats[i].username == sender)
-                                    {
-                                        Message message = opened_chats[i];
-                                        message.last_message = DateTime.Now;
-                                        opened_chats[i] = message;
-                                        break;
-                                    }
                                 }
                             });
                                 
@@ -329,6 +300,8 @@ namespace NEA_GUI
             Panel? panel = (Panel?)sender;
             string username = panel!.GetChildAtPoint(new Point(1, 17)).Text;
 
+            Input_Box.Enabled = true;
+            Send_Button.Enabled = true;
             current_recipient = username;
             Active_Chat_Username.Text = username;
             information_label.Text = "Loading Chat...";
@@ -365,17 +338,6 @@ namespace NEA_GUI
 
             createMessageBox(message, ApplicationValues.username);
 
-            for (int i = 0; i < opened_chats.Count; i++)
-            {
-                if (opened_chats[i].username == recipent)
-                {
-                    Message message_struct = opened_chats[i];
-                    message_struct.last_message = DateTime.Now;
-                    opened_chats[i] = message_struct;
-                    break;
-                }
-            }
-
             await Task.Factory.StartNew(() => Messaging.sendMessage(message, recipent));
             Send_Button.Enabled = true;
         }
@@ -386,20 +348,11 @@ namespace NEA_GUI
         {
             public string username;
             public Panel panel;
-            public DateTime? last_message;
 
             public Message(string username, Panel panel)
             {
                 this.username = username;
                 this.panel = panel;
-                last_message = DateTime.Now;
-            }
-
-            public Message(string username, Panel panel, DateTime? last_message)
-            {
-                this.username = username;
-                this.panel = panel;
-                this.last_message = last_message;
             }
         }
 
@@ -428,18 +381,8 @@ namespace NEA_GUI
 
             name.Click += usernameLabelClick;
 
-            Message message;
-            if (last_message != null)
-            {
-                message = new Message(username, chat_panel, last_message);
-            }
-            else
-            {
-                message = new Message(username, chat_panel);
-            }
-            
+            Message message = new Message(username, chat_panel);
             opened_chats.Add(message);
-
         }
 
         private bool containsChat(string username)
@@ -473,6 +416,11 @@ namespace NEA_GUI
             }
         }
 
+        private void clearAllButton_Click(object sender, EventArgs e)
+        {
+            notificationFlowLayoutPanel.Controls.Clear();
+        }
+
         private void inputBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && Send_Button.Enabled)
@@ -480,16 +428,6 @@ namespace NEA_GUI
                 sendButtonClick(sender, e);
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void clearAllButton_Click(object sender, EventArgs e)
-        {
-            notificationFlowLayoutPanel.Controls.Clear();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

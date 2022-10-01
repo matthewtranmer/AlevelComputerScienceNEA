@@ -166,7 +166,6 @@ CREATE TABLE openedchats(
     ChatID INT AUTO_INCREMENT,
     OwnerID INT,
     RecipientID INT,
-    LastMessage DATETIME,
 
     PRIMARY KEY (ChatID),
     FOREIGN KEY (OwnerID) REFERENCES users(UserID),

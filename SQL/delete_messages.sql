@@ -5,3 +5,4 @@ delete from oldmessages;
 delete from conversations;
 delete from managementrequests;
 delete from openedchats;
+delete from friendgraphlinks;

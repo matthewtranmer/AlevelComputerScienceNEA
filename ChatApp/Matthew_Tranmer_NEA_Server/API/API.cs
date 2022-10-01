@@ -451,8 +451,6 @@ namespace Matthew_Tranmer_NEA_Server
 
             lock (db) command.ExecuteNonQuery();
 
-            updateChatLastMessage(db, username, recipient_username);
-
             Dictionary<string, string> management_request = new Dictionary<string, string>()
             {
                 { "URL", "\\managment_tunnel\\message_ready" },
@@ -736,7 +734,6 @@ namespace Matthew_Tranmer_NEA_Server
 
                     break;
             }
-            updateChatLastMessage(db, username, sender);
             return response;
         }
 
@@ -1100,22 +1097,9 @@ namespace Matthew_Tranmer_NEA_Server
 
         static private void createChat(MySqlConnection db, string username, string recipient)
         {
-            string cmd_txt = "INSERT INTO openedchats (OwnerID, RecipientID, LastMessage) VALUES (" +
+            string cmd_txt = "INSERT INTO openedchats (OwnerID, RecipientID) VALUES (" +
                 "(SELECT UserID FROM users WHERE Username = @username)," +
-                "(SELECT UserID FROM users WHERE Username = @recipient)," +
-                "CURRENT_TIMESTAMP())";
-
-            MySqlCommand command = new MySqlCommand(cmd_txt, db);
-            command.Parameters.AddWithValue("@username", username);
-            command.Parameters.AddWithValue("@recipient", recipient);
-            lock (db) command.ExecuteNonQuery();
-        }
-
-        static private void updateChatLastMessage(MySqlConnection db, string username, string recipient)
-        {
-            string cmd_txt = "UPDATE openedchats SET LastMessage = CURRENT_TIMESTAMP() WHERE " +
-                "OwnerID = (SELECT UserID FROM users WHERE Username = @username) AND " +
-                "RecipientID = (SELECT UserID FROM users WHERE Username = @recipient)";
+                "(SELECT UserID FROM users WHERE Username = @recipient))";
 
             MySqlCommand command = new MySqlCommand(cmd_txt, db);
             command.Parameters.AddWithValue("@username", username);
@@ -1131,10 +1115,9 @@ namespace Matthew_Tranmer_NEA_Server
                 return new Dictionary<string, string>() { { "error", "Invalid Session Token" } };
             }
 
-            string cmd_text = "SELECT users.Username, openedchats.LastMessage FROM users " +
+            string cmd_text = "SELECT users.Username FROM users " +
                 "INNER JOIN openedchats ON OpenedChats.RecipientID = users.UserID " +
-                "WHERE OwnerID = (SELECT UserID FROM users WHERE username = @username) " +
-                "ORDER BY openedchats.LastMessage";
+                "WHERE OwnerID = (SELECT UserID FROM users WHERE username = @username) ";
 
             MySqlCommand command = new MySqlCommand(cmd_text, db);
             command.Parameters.AddWithValue("@username", username);
@@ -1148,13 +1131,10 @@ namespace Matthew_Tranmer_NEA_Server
                     while (reader.Read())
                     {
                         string recipient_username = reader.GetString(0);
-                        DateTime last_message = reader.GetDateTime(1);
-                        string encoded_time = last_message.Ticks.ToString();
 
                         Dictionary<string, string> chat = new Dictionary<string, string>()
                         {
                             { "recipient", recipient_username },
-                            { "last_message", encoded_time }
                         };
 
                         chats.Add(chat);

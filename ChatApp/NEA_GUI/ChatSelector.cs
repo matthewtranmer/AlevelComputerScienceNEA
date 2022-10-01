@@ -59,6 +59,11 @@ namespace NEA_GUI
             Button? button = sender as Button;
             button?.Parent.Dispose();
 
+            if (requestsRecievedFlowLayoutPanel.Controls.Count == 0)
+            {
+                setNoFriendRequestRecieved();
+            }
+
             if (!has_friends)
             {
                 friendsFlowLayoutPanel.Controls.Clear();
