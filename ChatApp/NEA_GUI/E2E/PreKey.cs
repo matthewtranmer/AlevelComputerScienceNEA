@@ -12,7 +12,7 @@ namespace Matthew_Tranmer_NEA.E2E
     {
         public string identifier { get; }
         public KeyPair key { get; }
-
+  
         public PreKey(KeyPair key)
         {
             identifier = Guid.NewGuid().ToString();

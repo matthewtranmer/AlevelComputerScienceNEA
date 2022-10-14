@@ -39,6 +39,8 @@ namespace NEA_GUI
                 selected_pre_key.key.getPrivateComponent()
             );
 
+            ApplicationValues.pre_keys.Remove(selected_pre_key);
+
             byte[] encrypted_message = Convert.FromBase64String(response["encrypted_message"]);
 
             Span<byte> encoded_public_ratchet_key = Convert.FromBase64String(response["public_ratchet_key"]);
@@ -56,7 +58,13 @@ namespace NEA_GUI
             string user_encrypted_message = Convert.ToBase64String(Encryption.encrypt(plaintext_message, ApplicationValues.encryption_key));
             string encrypted_root_chain = Convert.ToBase64String(Encryption.encrypt(message_chain_root, ApplicationValues.encryption_key));
 
+            PreKey new_pre_key = new PreKey(new KeyPair(PreDefinedCurves.nist256));
+            ApplicationValues.pre_keys.Add(new_pre_key);
 
+            string encoded_new_public_pre_key = Convert.ToBase64String(new_pre_key.key.getPublicComponent().compressPoint());
+
+            string encoded_new_private_pre_key = Convert.ToBase64String(new_pre_key.key.getPrivateComponent().ToByteArray());
+            string encrypted_new_private_pre_key = Convert.ToBase64String(Encryption.encrypt(encoded_new_private_pre_key, ApplicationValues.encryption_key));
 
             Dictionary<string, string> APIrequest = new Dictionary<string, string>()
             {
@@ -68,11 +76,16 @@ namespace NEA_GUI
                 { "message_type", "initial_message" },
                 { "encrypted_message", user_encrypted_message },
                 { "private_chain_key", encrypted_root_chain },
-                { "time_sent", response["time_sent"] }
+                { "time_sent", response["time_sent"] },
+                { "new_pre_key_identifier", new_pre_key.identifier },
+                { "new_public_pre_key", encoded_new_public_pre_key },
+                { "new_private_pre_key", encrypted_new_private_pre_key }
             };
 
             (_, bool fatal_error) = API.apiRequest(APIrequest);
             if (fatal_error) throw new Exception("Fatal Error");
+
+
 
             return plaintext_message;
         }

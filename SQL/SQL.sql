@@ -56,6 +56,7 @@ CREATE TABLE publicprekeys(
     UserID INT,
     Identifier VARCHAR(255),
     PreKey VARCHAR(255),
+    HasBeenUsed TINYINT(1),
 
     PRIMARY KEY (PreKeyID),
     FOREIGN KEY (UserID) REFERENCES users(UserID)

@@ -94,7 +94,7 @@ namespace Matthew_Tranmer_NEA_Server
             }
 
             //Store the public pre key into the publicprekeys table.
-            string cmd_text = "INSERT INTO publicprekeys (UserID, Identifier, PreKey) VALUES ((SELECT UserID FROM users WHERE Username = @username), @Identifier, @PreKey);";
+            string cmd_text = "INSERT INTO publicprekeys (UserID, Identifier, PreKey, HasBeenUsed) VALUES ((SELECT UserID FROM users WHERE Username = @username), @Identifier, @PreKey, 0);";
             MySqlCommand command = new MySqlCommand(cmd_text, db);
             command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@Identifier", identitfier);
@@ -464,16 +464,15 @@ namespace Matthew_Tranmer_NEA_Server
 
         private static Dictionary<string, string> fetchPreKeyBundle(MySqlConnection db, string username)
         {
-            //DELETE PRE KEY BUNDLE AFTER TESTING
-
-            string cmd_text = "SELECT publicprekeys.PreKey, publicprekeys.Identifier, handshakevalues.PublicIDkey, handshakevalues.PublicSignedPreKey, handshakevalues.PreKeySignature " +
+            string cmd_text = "SELECT publicprekeys.PreKey, publicprekeys.Identifier, handshakevalues.PublicIDkey, handshakevalues.PublicSignedPreKey, handshakevalues.PreKeySignature, publicprekeys.PreKeyID " +
             "FROM publicprekeys INNER JOIN handshakevalues ON publicprekeys.UserID = handshakevalues.UserID " +
-            "WHERE publicprekeys.UserID = (SELECT UserID FROM Users WHERE username = @username) LIMIT 1;";
+            "WHERE publicprekeys.UserID = (SELECT UserID FROM Users WHERE username = @username) AND publicprekeys.HasBeenUsed = 0 LIMIT 1;";
 
             MySqlCommand command = new MySqlCommand(cmd_text, db);
             command.Parameters.AddWithValue("@username", username);
 
             Dictionary<string, string> pre_key_bundle;
+            int pre_keyID = -1;
 
             lock (db)
             {
@@ -482,7 +481,7 @@ namespace Matthew_Tranmer_NEA_Server
                 {
                     if (!reader.Read())
                     {
-                        return new Dictionary<string, string>() { { "error", "Out Of Pre Keys" } };
+                        return new Dictionary<string, string>() { { "error", "Out Of Pre Keys. Please wait for the user to come online again." } };
                     }
 
                     string public_one_time_prekey = reader.GetString(0);
@@ -490,6 +489,7 @@ namespace Matthew_Tranmer_NEA_Server
                     string public_reciever_ID = reader.GetString(2);
                     string public_signed_pre_key = reader.GetString(3);
                     string pre_key_signature = reader.GetString(4);
+                    pre_keyID = reader.GetInt32(5);
 
                     pre_key_bundle = new Dictionary<string, string>()
                     {
@@ -501,6 +501,11 @@ namespace Matthew_Tranmer_NEA_Server
                     };
                 }
             }
+
+            cmd_text = "UPDATE publicprekeys SET HasBeenUsed = 1 WHERE PreKeyID = @prekeyID";
+            command = new MySqlCommand(cmd_text, db);
+            command.Parameters.AddWithValue("@prekeyID", pre_keyID);
+            lock (db) command.ExecuteNonQuery();
 
             return pre_key_bundle;
         }
@@ -657,7 +662,7 @@ namespace Matthew_Tranmer_NEA_Server
             switch (message_type)
             {
                 case "initial_message":
-                    cmd_text = "SELECT chainkeys.PublicRatchetKey, publicprekeys.Identifier, x3dhhandshake.PublicEphemeralKey, handshakevalues.PublicIDkey FROM chainkeys " +
+                    cmd_text = "SELECT chainkeys.PublicRatchetKey, publicprekeys.Identifier, x3dhhandshake.PublicEphemeralKey, handshakevalues.PublicIDkey, publicprekeys.PreKeyID FROM chainkeys " +
                         "INNER JOIN x3dhhandshake ON x3dhhandshake.ConversationID = chainkeys.ConversationID " +
                         "INNER JOIN publicprekeys ON publicprekeys.PreKeyID = x3dhhandshake.PreKeyID " +
                         "INNER JOIN conversations ON conversations.ConversationID = chainkeys.ConversationID " +
@@ -666,6 +671,8 @@ namespace Matthew_Tranmer_NEA_Server
 
                     command = new MySqlCommand(cmd_text, db);
                     command.Parameters.AddWithValue("@ConversationID", conversationID);
+
+                    int pre_keyID = -1;
 
                     lock (db)
                     {
@@ -676,8 +683,16 @@ namespace Matthew_Tranmer_NEA_Server
                             response["prekey_identity"] = reader.GetString(1);
                             response["public_ephemeral_key"] = reader.GetString(2);
                             response["public_sender_ID"] = reader.GetString(3);
+                            pre_keyID = reader.GetInt32(4);
                         }
                     }
+
+                    cmd_text = "DELETE FROM x3dhhandshake WHERE PreKeyID = @prekeyID1; DELETE FROM privateprekeys WHERE AssociatedPreKeyID = @prekeyID2; DELETE FROM publicprekeys WHERE PreKeyID = @prekeyID3;";
+                    command = new MySqlCommand(cmd_text, db);
+                    command.Parameters.AddWithValue("@prekeyID1", pre_keyID);
+                    command.Parameters.AddWithValue("@prekeyID2", pre_keyID);
+                    command.Parameters.AddWithValue("@prekeyID3", pre_keyID);
+                    lock (db) command.ExecuteNonQuery();
 
                     createChat(db, username, sender);
                     break;
@@ -762,6 +777,8 @@ namespace Matthew_Tranmer_NEA_Server
                         command.Parameters.AddWithValue("@PrivateChainKey", request["private_chain_key"]);
                         command.Parameters.AddWithValue("@ConversationID", ConversationID);
                         lock (db) command.ExecuteNonQuery();
+
+                        uploadPreKey(db, username, token, request["new_pre_key_identifier"], request["new_private_pre_key"], request["new_public_pre_key"]);
                         break;
 
                     case "first_in_chain":
