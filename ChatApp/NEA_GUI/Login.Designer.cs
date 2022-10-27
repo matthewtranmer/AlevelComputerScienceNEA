@@ -33,8 +33,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.loading_icon = new System.Windows.Forms.PictureBox();
             this.sign_up_label = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -87,8 +85,6 @@
             // panel2
             // 
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.loading_icon);
             this.panel2.Controls.Add(this.sign_up_label);
             this.panel2.Controls.Add(this.label6);
@@ -103,26 +99,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(662, 391);
             this.panel2.TabIndex = 3;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(30, 47);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(108, 23);
-            this.button2.TabIndex = 17;
-            this.button2.Text = "Use Mick";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(30, 11);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(108, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Use Matthew";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // loading_icon
             // 
@@ -266,7 +242,5 @@
         private Label sign_up_label;
         private Label label6;
         private PictureBox loading_icon;
-        private Button button2;
-        private Button button1;
     }
 }

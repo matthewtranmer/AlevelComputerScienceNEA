@@ -798,8 +798,6 @@ namespace Matthew_Tranmer_NEA_Server
                 time_sent = DateTime.Now;
             }
 
-            
-
             cmd_text = "INSERT INTO oldmessages (MessageData, TimeSent, Sender, ConversationID) VALUES (@MessageData, @TimeSent, @Sender, @ConversationID)";
             command = new MySqlCommand(cmd_text, db);
             command.Parameters.AddWithValue("@MessageData", request["encrypted_message"]);

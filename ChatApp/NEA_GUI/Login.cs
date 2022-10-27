@@ -168,19 +168,5 @@ namespace NEA_GUI
             form.ShowDialog();
             Close();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Username_Input.Text = "Matthew";
-            Password_Input.Text = "Matthew";
-            submitClick(sender, e);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Username_Input.Text = "Mick";
-            Password_Input.Text = "Mick";
-            submitClick(sender, e);
-        }
     }
 }
