@@ -238,14 +238,6 @@ namespace NEA_GUI
             string recipient = usernameInput.Text;
             usernameInput.Clear();
 
-            if (!has_requests_sent)
-            {
-                requestsSentFlowLayoutPanel.Controls.Clear();
-                has_requests_sent = true;
-            }
-
-            addRequestSent(recipient);
-
             Dictionary<string, string> request = new Dictionary<string, string>()
             {
                 { "URL", "\\api\\friend\\send_friend_request" },
@@ -254,7 +246,17 @@ namespace NEA_GUI
                 { "recipient", recipient }
             };
 
-            API.apiRequest(request);
+            (Dictionary<string, string> _, bool error) = API.apiRequest(request);
+            if (!error)
+            {
+                if (!has_requests_sent)
+                {
+                    requestsSentFlowLayoutPanel.Controls.Clear();
+                    has_requests_sent = true;
+                }
+
+                addRequestSent(recipient);
+            }
         }
     }
 }

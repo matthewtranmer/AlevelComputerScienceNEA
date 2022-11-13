@@ -111,7 +111,7 @@ namespace Matthew_Tranmer_NEA.Networking
             }
 
             //Return shared encryption key.
-            return generateSecretSend(key_pair.getPrivateComponent(), deserialized_payload["public_key"]); ;
+            return generateSecretSend(key_pair.getPrivateComponent(), deserialized_payload["public_key"]);
         }
         
 

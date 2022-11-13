@@ -224,14 +224,24 @@ namespace NEA_GUI
             EllipticCurvePoint public_one_time_prekey_decoded = new EllipticCurvePoint(Convert.FromBase64String(public_one_time_prekey), PreDefinedCurves.nist256);
             Span<byte> signature_decoded = Convert.FromBase64String(pre_key_signature);
 
-            string root_key = X3DH.calculateSecretSender(
-                ApplicationValues.identity_key,
-                public_signed_pre_key_decoded,
-                ephemeral_key.getPrivateComponent(),
-                public_reciever_ID_decoded,
-                public_one_time_prekey_decoded,
-                signature_decoded
-            );
+            string root_key;
+
+            try
+            {
+                root_key = X3DH.calculateSecretSender(
+                    ApplicationValues.identity_key,
+                    public_signed_pre_key_decoded,
+                    ephemeral_key.getPrivateComponent(),
+                    public_reciever_ID_decoded,
+                    public_one_time_prekey_decoded,
+                    signature_decoded
+                );
+            }
+            catch
+            {
+                Functions.showError("The security of this conversation cannot be verified, therefore, the message has not been sent.");
+                return (null, true);
+            }
 
             KeyPair ratchet_key = new KeyPair(PreDefinedCurves.nist256);
 
@@ -360,7 +370,8 @@ namespace NEA_GUI
             switch (response!["message_send_type"])
             {
                 case "initial_message":
-                    sendInitialMessage(message, recipient, response["public_signed_pre_key"], response["public_reciever_ID"], response["public_one_time_prekey"], response["prekey_identity"], response["pre_key_signature"]);
+                    var function_response = sendInitialMessage(message, recipient, response["public_signed_pre_key"], response["public_reciever_ID"], response["public_one_time_prekey"], response["prekey_identity"], response["pre_key_signature"]);
+                    if (function_response.fatal_error) return function_response;
                     break;
 
                 case "first_in_chain":

@@ -220,6 +220,7 @@ namespace Matthew_Tranmer_NEA_Server.Workers
             {
                 //Recieve encrypted headers.
                 byte[] encoded_data = socket_wrapper.recieve();
+                //Decode bytes
                 string json_data = Encoding.UTF8.GetString(encoded_data);
 
                 //Deserialize recieved data.
@@ -307,9 +308,9 @@ namespace Matthew_Tranmer_NEA_Server.Workers
 
                         default:
                             response = new Dictionary<string, string>()
-                        {
-                            { "fatal_error", $"The requested endpoint URL ('{request["URL"]}') does not exist." }
-                        };
+                            {
+                                { "fatal_error", $"The requested endpoint URL ('{request["URL"]}') does not exist." }
+                            };
                             break;
                     }
                 }

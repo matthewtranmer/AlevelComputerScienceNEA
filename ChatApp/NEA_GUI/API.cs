@@ -13,11 +13,16 @@ namespace NEA_GUI
     internal static class API
     {
         //10.144.197.214
-        private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 9921);
-        //private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 10, 144, 197, 214 }), 9921);
+        //private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 9921);
+        private static IPEndPoint end_point = new IPEndPoint(new IPAddress(new byte[] { 192,168,1,2 }), 9921);
         private static System.Timers.Timer keep_alive_timer = new System.Timers.Timer(10500);
-        
+                
         private static EncryptedSocketWrapper? wrapper = null;
+
+        static API()
+        {
+            keep_alive_timer.Elapsed += keepAliveTimeout;
+        }
 
         private static void keepAliveTimeout(object? s, EventArgs a)
         {
@@ -28,6 +33,7 @@ namespace NEA_GUI
         {
             //Serialize the request body and send it encrypted to the server.
             string json_request = JsonSerializer.Serialize(request);
+            //Encode JSON and send
             socket_wrapper.send(Encoding.UTF8.GetBytes(json_request));
 
             //Recieve the JSON response body.

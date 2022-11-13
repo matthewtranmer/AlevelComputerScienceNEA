@@ -24,9 +24,10 @@ namespace NEA_GUI
             Task.Factory.StartNew(managmentTunnelWorker);
             Task.Factory.StartNew(createHeartbeat);
 
-            Text += $" - {ApplicationValues.username}";  
+            Text += $" - {ApplicationValues.username}";
 
             //Initialize dropdownbox.
+            sortByDropdown.Items.Add("");
             sortByDropdown.Items.Add("A to Z");
             sortByDropdown.Items.Add("Z to A");
             sortByDropdown.SelectedIndex = 0;
@@ -55,9 +56,12 @@ namespace NEA_GUI
 
             opened_chats.Clear();
 
-            foreach (Message message in result!)
+            if (result != null)
             {
-                addChat(message.username);
+                foreach (Message message in result)
+                {
+                    addChat(message.username);
+                }
             }
         }
 
@@ -329,16 +333,19 @@ namespace NEA_GUI
             chatPanelClick(label.Parent, e);
         }
 
-        private async void sendButtonClick(object? sender, EventArgs e)
+        private void sendButtonClick(object? sender, EventArgs e)
         {
             Send_Button.Enabled = false;
             string recipent = current_recipient;
             string message = Input_Box.Text;
             Input_Box.Clear();
 
-            createMessageBox(message, ApplicationValues.username);
+            var response = Messaging.sendMessage(message, recipent);
+            if (!response.fatal_error)
+            {
+                createMessageBox(message, ApplicationValues.username);
+            }
 
-            await Task.Factory.StartNew(() => Messaging.sendMessage(message, recipent));
             Send_Button.Enabled = true;
         }
 
