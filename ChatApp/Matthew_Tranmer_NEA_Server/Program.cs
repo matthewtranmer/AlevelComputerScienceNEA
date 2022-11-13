@@ -9,9 +9,6 @@ namespace Matthew_Tranmer_NEA_Server
 {
     internal class Program
     {
-        //Private Key: 47563461030232379838018606969981225219051095905568807231097714174869457590584
-        //Public Key: (89630596470571539848842129232432250117878455304252638950051962197460885296971, 81151631255409626093048500128742932208733034782939337963036891136896518229386)
-
         public static void Display(string? value, ConsoleColor foreground_color)
         {
             ConsoleColor default_color = Console.ForegroundColor;
