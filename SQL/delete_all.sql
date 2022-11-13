@@ -7,7 +7,7 @@ DELETE FROM x3dhhandshake;
 DELETE FROM messages;
 DELETE FROM oldmessages;
 DELETE FROM chainkeys;
-DELETE FROM friendgraphnodes;
+DELETE FROM openedchats;
 DELETE FROM friendgraphlinks;
 DELETE FROM friendrequests;
 DELETE FROM conversations;
